@@ -1,20 +1,18 @@
 # TP1: Biblioteca Digital de Artigos
-  - Gustavo Rodrigues de Aquino
-  - Maria Eduarda Rodrigues Pasquel
 
 ## 1. Equipe
-- **Back-end**: Gustavo Rodrigues de Aquino
-- **Front-end:**
+- **Back-end:** Gustavo Rodrigues de Aquino
+- **Front-end:** Maria Eduarda Rodrigues Pasquel
 
 ## 2. Detalhamento do Projeto
 Deseja-se disponibilizar acesso de forma fácil aos artigos publicados em determinados eventos científicos. Para isso, foi proposto o desenvolvimento de uma `Biblioteca Digital de Artigos`. O sistema deve atender aos requerimentos passados pelas histórias de usuário, mas sua implementação é livre e deve ser definida pelo time. Entretanto, **é obrigatório o uso do GitHub** e recomendado a utilização de uma IA de 2ª geração.
 
 ## 3. Tecnologias
 ### Tecnologias utilizadas
-- **Linguagem:** 
-- **Frameworks para front-end:** 
-- **Banco de dados:** 
-- **Repositório do GitHub:** 
+- **Linguagem Back-end:** Python
+- **Frameworks Front-end:** React
+- **Banco de dados:** MongoDB
+- **Repositório do GitHub:** `git@github.com:gst-aqn42/TP1.git`
 - **Ferramenta de IA:** GitHub Copilot
 
 ## 4. Histórias de Usuário
