@@ -1,0 +1,8 @@
+# Ignorar pastas
+.lixeira/
+
+# Ignorar a pasta 'logs' em qualquer nível do projeto
+logs/
+
+# Ignorar uma pasta específica dentro de um subdiretório
+E.S - TP1/BD/
