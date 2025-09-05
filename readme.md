@@ -1,4 +1,6 @@
 # TP1: Biblioteca Digital de Artigos
+  - Gustavo Rodrigues de Aquino
+  - Maria Eduarda Rodrigues Pasquel
 
 ## 1. Equipe
 - **Back-end**: Gustavo Rodrigues de Aquino
