@@ -6,3 +6,8 @@ logs/
 
 # Ignorar uma pasta específica dentro de um subdiretório
 E.S - TP1/BD/
+
+# Ignora caches e ambientes virtuais
+__pycache__/
+*.pyc
+venv/
