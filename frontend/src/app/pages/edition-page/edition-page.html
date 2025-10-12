@@ -1,0 +1,94 @@
+<div class="container" *ngIf="!loading">
+  <div class="breadcrumb">
+    <a routerLink="/pesquisa">Home</a>
+    <mat-icon>chevron_right</mat-icon>
+    <a [routerLink]="['/eventos', eventSigla]">{{ event?.sigla }}</a>
+    <mat-icon>chevron_right</mat-icon>
+    <span>{{ editionYear }}</span>
+  </div>
+
+  <div class="edition-header" *ngIf="event && edition">
+    <h1>{{ event.name }}</h1>
+    <h2 class="edition-title">{{ edition.numero }}ª Edição - {{ edition.year }}</h2>
+    <div class="edition-details">
+      <div class="detail-item">
+        <mat-icon>location_on</mat-icon>
+        <span>{{ edition.cidadeSede }}</span>
+      </div>
+      <div class="detail-item">
+        <mat-icon>article</mat-icon>
+        <span>{{ articles.length }} artigos publicados</span>
+      </div>
+    </div>
+    <p class="edition-description" *ngIf="edition.description">
+      {{ edition.description }}
+    </p>
+  </div>
+
+  <mat-card class="articles-card" *ngIf="articles.length > 0">
+    <mat-card-header>
+      <mat-card-title>Artigos Publicados</mat-card-title>
+      <mat-card-subtitle>{{ articles.length }} artigos encontrados</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="articles-list">
+        <div class="article-item" *ngFor="let article of articles; let i = index">
+          <div class="article-number">{{ i + 1 }}</div>
+          <div class="article-content">
+            <h3 class="article-title">
+              <a (click)="openPdf(article.pdfUrl!)" *ngIf="article.pdfUrl" class="pdf-link">
+                {{ article.title }}
+              </a>
+              <span *ngIf="!article.pdfUrl" class="title-no-link">
+                {{ article.title }}
+              </span>
+            </h3>
+            <p class="article-authors">{{ article.authors.join(', ') }}</p>
+            <p class="article-abstract" *ngIf="article.abstract">
+              {{ article.abstract }}
+            </p>
+            <div class="article-meta">
+              <span class="pages" *ngIf="article.pages">Páginas: {{ article.pages }}</span>
+              <span class="pdf-status" *ngIf="article.pdfUrl">
+                <mat-icon>picture_as_pdf</mat-icon>
+                PDF disponível
+              </span>
+              <span class="no-pdf" *ngIf="!article.pdfUrl">
+                <mat-icon>description</mat-icon>
+                PDF não disponível
+              </span>
+            </div>
+          </div>
+          <button
+            mat-icon-button
+            (click)="openPdf(article.pdfUrl!)"
+            *ngIf="article.pdfUrl"
+            class="pdf-button"
+            matTooltip="Abrir PDF">
+            <mat-icon>open_in_new</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="no-articles" *ngIf="event && edition && articles.length === 0">
+    <mat-icon>article</mat-icon>
+    <h2>Nenhum artigo encontrado</h2>
+    <p>Esta edição ainda não possui artigos cadastrados.</p>
+  </div>
+
+  <div class="not-found" *ngIf="!event || !edition">
+    <mat-icon>event_busy</mat-icon>
+    <h2>Edição não encontrada</h2>
+    <p>A edição {{ editionYear }} do evento {{ eventSigla }} não foi encontrada.</p>
+    <button mat-raised-button color="primary" routerLink="/pesquisa">
+      Voltar à Busca
+    </button>
+  </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+  <p>Carregando artigos da edição...</p>
+</div>

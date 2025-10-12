@@ -1,0 +1,73 @@
+<h1 mat-dialog-title>Novo Artigo</h1>
+
+<div mat-dialog-content>
+  <form [formGroup]="articleForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Edição</mat-label>
+      <mat-select formControlName="eventEditionId" required>
+        <mat-option *ngFor="let edition of editions" [value]="edition.id">
+          {{ getEditionLabel(edition) }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Autores</mat-label>
+      <input matInput formControlName="authors" placeholder="Separados por vírgula" required>
+      <mat-hint>Ex: João Silva, Maria Santos, Pedro Oliveira</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Resumo</mat-label>
+      <textarea matInput formControlName="abstract" rows="4"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Palavras-chave</mat-label>
+      <input matInput formControlName="keywords" placeholder="Separadas por vírgula">
+      <mat-hint>Ex: engenharia de software, metodologia ágil, qualidade</mat-hint>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Páginas</mat-label>
+        <input matInput formControlName="pages" placeholder="Ex: 10-20">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>DOI</mat-label>
+        <input matInput formControlName="doi" placeholder="Ex: 10.1000/xyz123">
+      </mat-form-field>
+    </div>
+
+    <div class="file-upload">
+      <label for="pdf-upload" class="file-label">
+        <mat-icon>attach_file</mat-icon>
+        PDF do Artigo *
+      </label>
+      <input
+        id="pdf-upload"
+        type="file"
+        accept=".pdf"
+        (change)="onFileSelected($event)"
+        class="file-input">
+      <div class="file-info" *ngIf="selectedFile">
+        <mat-icon>picture_as_pdf</mat-icon>
+        {{ selectedFile.name }}
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()"
+          [disabled]="articleForm.invalid || !selectedFile">
+    Salvar
+  </button>
+</div>

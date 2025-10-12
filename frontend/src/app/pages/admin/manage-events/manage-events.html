@@ -1,0 +1,39 @@
+<div class="container">
+  <h1>Gerenciamento de Eventos</h1>
+
+  <div class="actions-bar">
+    <button mat-raised-button color="primary" (click)="openDialog()">
+      Novo Evento
+    </button>
+  </div>
+
+  <mat-table [dataSource]="dataSource" class="events-table">
+    <!-- Coluna Nome -->
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let event">{{ event.name }}</td>
+    </ng-container>
+
+    <!-- Coluna Sigla -->
+    <ng-container matColumnDef="sigla">
+      <th mat-header-cell *matHeaderCellDef>Sigla</th>
+      <td mat-cell *matCellDef="let event">{{ event.sigla }}</td>
+    </ng-container>
+
+    <!-- Coluna Ações -->
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let event">
+        <button mat-icon-button (click)="openDialog(event)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteEvent(event.id!)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </mat-table>
+</div>

@@ -1,0 +1,71 @@
+<div class="container">
+  <h1>Cadastro de Artigos em Massa</h1>
+
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>Upload de Arquivo BibTeX</mat-card-title>
+      <mat-card-subtitle>
+        Faça upload de um arquivo .bib para importar múltiplos artigos de uma só vez
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="upload-area" [class.has-file]="selectedFile" (click)="triggerFileInput()">
+        <input
+          id="bibtex-upload"
+          type="file"
+          accept=".bib"
+          (change)="onFileSelected($event)"
+          class="file-input">
+
+        <div class="upload-content" *ngIf="!selectedFile">
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <h3>Clique para selecionar um arquivo</h3>
+          <p>ou arraste e solte um arquivo .bib aqui</p>
+          <small>Formatos aceitos: .bib (BibTeX)</small>
+        </div>
+
+        <div class="file-selected" *ngIf="selectedFile">
+          <mat-icon class="file-icon">description</mat-icon>
+          <div class="file-details">
+            <h4>{{ selectedFile.name }}</h4>
+            <p>{{ getFileSize() }}</p>
+          </div>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="removeFile(); $event.stopPropagation()"
+            class="remove-button">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="upload-progress" *ngIf="isUploading">
+        <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+        <p>Processando arquivo... {{ uploadProgress.toFixed(0) }}%</p>
+      </div>
+
+      <div class="info-section">
+        <h4>Informações sobre o formato BibTeX:</h4>
+        <ul>
+          <li>O arquivo deve conter entradas válidas do BibTeX</li>
+          <li>Cada entrada deve ter pelo menos título e autor</li>
+          <li>Campos suportados: title, author, year, pages, doi, abstract, keywords</li>
+          <li>Os artigos serão associados automaticamente às edições quando possível</li>
+        </ul>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="!selectedFile || isUploading">
+        <mat-icon>upload</mat-icon>
+        {{ isUploading ? 'Processando...' : 'Enviar Arquivo' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

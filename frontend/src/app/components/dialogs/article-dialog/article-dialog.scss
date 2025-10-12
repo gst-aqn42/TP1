@@ -1,0 +1,51 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.half-width {
+  width: calc(50% - 8px);
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+form {
+  min-width: 500px;
+}
+
+.file-upload {
+  margin: 16px 0;
+  padding: 16px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #fafafa;
+}
+
+.file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #666;
+  font-weight: 500;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: #4CAF50;
+  font-weight: 500;
+}
