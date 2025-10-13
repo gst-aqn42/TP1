@@ -1,0 +1,69 @@
+<div class="container">
+  <!-- Header de boas-vindas -->
+  <div class="welcome-header">
+    <h1>Bem-vindo à e-lib</h1>
+    <p>Sistema de gerenciamento de eventos acadêmicos e artigos científicos</p>
+  </div>
+
+  <!-- Seção dos Top 5 Artigos -->
+  <section class="top-section">
+    <h2>
+      <mat-icon>article</mat-icon>
+      Artigos em Destaque
+    </h2>
+    <div class="articles-grid">
+      <mat-card *ngFor="let article of topArticles; let i = index" class="article-card">
+        <mat-card-header>
+          <div class="article-number">{{ i + 1 }}</div>
+          <mat-card-title class="article-title">{{ article.title }}</mat-card-title>
+          <mat-card-subtitle>{{ article.authors.join(', ') }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="article-abstract">{{ article.abstract }}</p>
+          <div class="article-info">
+            <span class="year">{{ article.year }}</span>
+            <span class="pages" *ngIf="article.pages">{{ article.pages }}</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="openPdf(article.pdfUrl!)" *ngIf="article.pdfUrl">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Ver PDF
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div class="section-action">
+      <button mat-raised-button color="accent" routerLink="/search">
+        <mat-icon>search</mat-icon>
+        Buscar Todos os Artigos
+      </button>
+    </div>
+  </section>
+
+  <!-- Seção dos Top 5 Eventos -->
+  <section class="top-section">
+    <h2>
+      <mat-icon>event</mat-icon>
+      Eventos em Destaque
+    </h2>
+    <div class="events-grid">
+      <mat-card *ngFor="let event of topEvents; let i = index" class="event-card">
+        <mat-card-header>
+          <div class="event-number">{{ i + 1 }}</div>
+          <mat-card-title class="event-title">{{ event.name }}</mat-card-title>
+          <mat-card-subtitle *ngIf="event.sigla">{{ event.sigla }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="event-description">{{ event.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="section-action">
+      <button mat-raised-button color="primary" routerLink="/events">
+        <mat-icon>event</mat-icon>
+        Explorar Todos os Eventos
+      </button>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,109 @@
+<div class="container" *ngIf="!loading">
+  <div class="breadcrumb">
+    <a routerLink="/pesquisa">Home</a>
+    <mat-icon>chevron_right</mat-icon>
+    <span>Autor</span>
+    <mat-icon>chevron_right</mat-icon>
+    <span>{{ getFormattedAuthorName() }}</span>
+  </div>
+
+  <div class="author-header">
+    <div class="author-info">
+      <mat-icon class="author-icon">person</mat-icon>
+      <div class="author-details">
+        <h1>Artigos de {{ getFormattedAuthorName() }}</h1>
+        <p class="author-stats">
+          {{ totalArticles }} artigo{{ totalArticles !== 1 ? 's' : '' }} publicado{{ totalArticles !== 1 ? 's' : '' }}
+          {{ years.length > 0 ? 'entre ' + years[years.length - 1] + ' e ' + years[0] : '' }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <mat-card class="articles-card" *ngIf="totalArticles > 0">
+    <mat-card-header>
+      <mat-card-title>Publicações por Ano</mat-card-title>
+      <mat-card-subtitle>Organizadas cronologicamente</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-accordion class="years-accordion">
+        <mat-expansion-panel
+          *ngFor="let year of years; let first = first"
+          [expanded]="first"
+          class="year-panel">
+
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div class="year-header">
+                <span class="year-number">{{ year }}</span>
+                <span class="articles-count">
+                  {{ articlesByYear.get(year)!.length }} artigo{{ articlesByYear.get(year)!.length !== 1 ? 's' : '' }}
+                </span>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="year-content">
+            <div class="article-item" *ngFor="let article of articlesByYear.get(year); let i = index">
+              <div class="article-number">{{ i + 1 }}</div>
+              <div class="article-content">
+                <h3 class="article-title">
+                  <a (click)="openPdf(article.pdfUrl!)" *ngIf="article.pdfUrl" class="pdf-link">
+                    {{ article.title }}
+                  </a>
+                  <span *ngIf="!article.pdfUrl" class="title-no-link">
+                    {{ article.title }}
+                  </span>
+                </h3>
+
+                <p class="article-authors">
+                  <span
+                    *ngFor="let author of article.authors; let last = last"
+                    [class.highlight-author]="author.toLowerCase().includes(authorName.toLowerCase())">
+                    {{ author }}{{ !last ? ', ' : '' }}
+                  </span>
+                </p>
+
+                <p class="article-abstract" *ngIf="article.abstract">
+                  {{ article.abstract }}
+                </p>
+
+                <div class="article-meta">
+                  <span class="event-info">{{ getEventInfo(article) }}</span>
+                  <span class="pages-info" *ngIf="article.pages">Páginas: {{ article.pages }}</span>
+                  <span class="pdf-status" *ngIf="article.pdfUrl">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    PDF disponível
+                  </span>
+                </div>
+              </div>
+
+              <button
+                mat-icon-button
+                (click)="openPdf(article.pdfUrl!)"
+                *ngIf="article.pdfUrl"
+                class="pdf-button"
+                matTooltip="Abrir PDF">
+                <mat-icon>open_in_new</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="no-articles" *ngIf="totalArticles === 0">
+    <mat-icon>person_off</mat-icon>
+    <h2>Nenhum artigo encontrado</h2>
+    <p>Não foram encontrados artigos para o autor "{{ getFormattedAuthorName() }}".</p>
+    <button mat-raised-button color="primary" routerLink="/pesquisa">
+      Fazer Nova Busca
+    </button>
+  </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+  <p>Carregando artigos do autor...</p>
+</div>

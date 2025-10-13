@@ -1,0 +1,26 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+button {
+  margin-left: 8px;
+  color: white !important;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+}
+
+.logo-link {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}

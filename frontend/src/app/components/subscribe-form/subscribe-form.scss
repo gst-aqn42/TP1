@@ -1,0 +1,73 @@
+.subscribe-container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+}
+
+.subscribe-info {
+  margin-bottom: 20px;
+}
+
+.subscribe-info h4 {
+  margin: 0 0 8px 0;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.subscribe-info p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.subscribe-form {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.email-field {
+  flex: 1;
+  min-width: 250px;
+}
+
+.email-field ::ng-deep .mat-mdc-form-field {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+}
+
+.email-field ::ng-deep .mat-mdc-text-field-wrapper {
+  background: transparent;
+}
+
+.subscribe-button {
+  margin-top: 8px;
+  min-width: 120px;
+  height: 48px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.subscribe-button:disabled {
+  opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+  .subscribe-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .email-field {
+    min-width: unset;
+  }
+
+  .subscribe-button {
+    margin-top: 16px;
+    width: 100%;
+  }
+}

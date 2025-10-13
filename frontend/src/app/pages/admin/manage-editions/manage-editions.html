@@ -1,0 +1,57 @@
+<div class="container">
+  <h1>Gerenciamento de Edições</h1>
+
+  <div class="filter-section">
+    <mat-form-field appearance="outline">
+      <mat-label>Filtrar por Evento</mat-label>
+      <mat-select [(value)]="selectedEventId" (selectionChange)="onEventChange()">
+        <mat-option value="">Todos os eventos</mat-option>
+        <mat-option *ngFor="let event of events" [value]="event.id">
+          {{ event.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="actions-bar">
+    <button mat-raised-button color="primary" (click)="openDialog()">
+      Nova Edição
+    </button>
+  </div>
+
+  <mat-table [dataSource]="dataSource" class="editions-table">
+    <!-- Coluna Ano -->
+    <ng-container matColumnDef="ano">
+      <th mat-header-cell *matHeaderCellDef>Ano</th>
+      <td mat-cell *matCellDef="let edition">{{ edition.year }}</td>
+    </ng-container>
+
+    <!-- Coluna Número -->
+    <ng-container matColumnDef="numero">
+      <th mat-header-cell *matHeaderCellDef>Número</th>
+      <td mat-cell *matCellDef="let edition">{{ edition.numero }}</td>
+    </ng-container>
+
+    <!-- Coluna Cidade Sede -->
+    <ng-container matColumnDef="cidadeSede">
+      <th mat-header-cell *matHeaderCellDef>Cidade Sede</th>
+      <td mat-cell *matCellDef="let edition">{{ edition.cidadeSede }}</td>
+    </ng-container>
+
+    <!-- Coluna Ações -->
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let edition">
+        <button mat-icon-button (click)="openDialog(edition)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteEdition(edition.id!)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </mat-table>
+</div>

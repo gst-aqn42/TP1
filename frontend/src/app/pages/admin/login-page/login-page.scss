@@ -1,0 +1,80 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-image: url('/images/library-background.png'), url('/assets/images/library-background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: rgba(248, 244, 237, 0.3);
+  backdrop-filter: blur(2px);
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(184, 149, 106, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  color: white !important;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+// Estilos para elementos dentro do card de login
+.login-card {
+  h2 {
+    color: white !important;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  mat-form-field {
+    .mat-mdc-form-field-input-control input {
+      color: white !important;
+    }
+
+    .mat-mdc-form-field-label {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      border-radius: 8px !important;
+    }
+
+    .mdc-line-ripple::before,
+    .mdc-line-ripple::after {
+      border-bottom-color: rgba(255, 255, 255, 0.6) !important;
+    }
+  }
+
+  button[mat-raised-button] {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #b8956a !important;
+    font-weight: 600 !important;
+
+    &:hover {
+      background-color: white !important;
+      color: #8f6f4a !important;
+    }
+  }
+}

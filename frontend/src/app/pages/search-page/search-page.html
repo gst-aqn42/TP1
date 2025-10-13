@@ -1,0 +1,79 @@
+<div class="container">
+  <div class="search-header">
+    <h1>Busca Global</h1>
+    <p>Encontre artigos, autores e eventos em nossa biblioteca digital</p>
+  </div>
+
+  <mat-card class="search-card">
+    <mat-card-content>
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <div class="search-input-section">
+          <mat-form-field appearance="outline" class="search-input">
+            <mat-label>Busca global</mat-label>
+            <input matInput formControlName="searchTerm" placeholder="Busque por um Artigo, Autor ou Evento">
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" class="search-button">
+            <mat-icon>search</mat-icon>
+            Pesquisar
+          </button>
+
+          <button mat-stroked-button color="accent" type="button" class="clear-button" (click)="clearSearch()" *ngIf="searchPerformed">
+            <mat-icon>clear</mat-icon>
+            Limpar
+          </button>
+        </div>
+
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Resultados da busca -->
+  <div class="results-section" *ngIf="searchResults.length > 0">
+    <h2>Resultados da Busca ({{ searchResults.length }})</h2>
+    <div class="results-grid">
+      <mat-card *ngFor="let article of searchResults" class="article-result-card">
+        <mat-card-header>
+          <mat-card-title>
+            <a (click)="openPdf(article.pdfUrl!)" class="article-title-link">
+              {{ article.title }}
+            </a>
+          </mat-card-title>
+          <mat-card-subtitle>{{ article.authors.join(', ') }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="abstract" *ngIf="article.abstract">{{ article.abstract }}</p>
+          <div class="article-info">
+            <span class="event-info">{{ getEventAndYear(article) }}</span>
+            <span class="pages-info" *ngIf="article.pages">Páginas: {{ article.pages }}</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="openPdf(article.pdfUrl!)" *ngIf="article.pdfUrl">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Abrir PDF
+          </button>
+          <button mat-button [disabled]="true" *ngIf="!article.pdfUrl">
+            <mat-icon>picture_as_pdf</mat-icon>
+            PDF não disponível
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Estado vazio -->
+  <div class="empty-state" *ngIf="searchPerformed && searchResults.length === 0">
+    <mat-icon>search_off</mat-icon>
+    <h3>Nenhum resultado encontrado</h3>
+    <p>Tente alterar os critérios de busca ou usar termos diferentes.</p>
+  </div>
+
+  <!-- Estado inicial -->
+  <div class="initial-state" *ngIf="!searchPerformed && searchResults.length > 0">
+    <mat-icon>library_books</mat-icon>
+    <h3>Todos os Artigos</h3>
+    <p>Explore todos os artigos disponíveis ou use o formulário acima para pesquisar.</p>
+  </div>
+</div>

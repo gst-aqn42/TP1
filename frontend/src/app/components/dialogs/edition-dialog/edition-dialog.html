@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>{{ isEditMode ? 'Editar Edição' : 'Nova Edição' }}</h1>
+
+<div mat-dialog-content>
+  <form [formGroup]="editionForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Evento</mat-label>
+      <mat-select formControlName="eventId" required>
+        <mat-option *ngFor="let event of events" [value]="event.id">
+          {{ event.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Ano</mat-label>
+      <input matInput type="number" formControlName="year" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Número</mat-label>
+      <input matInput type="number" formControlName="numero" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Cidade Sede</mat-label>
+      <input matInput formControlName="cidadeSede" required>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="editionForm.invalid">
+    Salvar
+  </button>
+</div>

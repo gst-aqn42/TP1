@@ -1,0 +1,185 @@
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+/* Mixin para background */
+@mixin library-background {
+  background-image: url('/images/library-background.png'), url('/assets/images/library-background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+// Definir paleta de cores personalizada em tons de bege sofisticado
+$custom-primary: (
+  50: #faf7f2,
+  100: #f0e6d3,
+  200: #e6d4b1,
+  300: #d4b896,
+  400: #c4a47c,
+  500: #b8956a,
+  600: #a6825a,
+  700: #8f6f4a,
+  800: #775c3a,
+  900: #5e462a,
+  A100: #f5e8d3,
+  A200: #e8d1a3,
+  A400: #d4b586,
+  A700: #c4a578,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(white, 0.87),
+    600: rgba(white, 0.87),
+    700: rgba(white, 0.87),
+    800: rgba(white, 0.87),
+    900: rgba(white, 0.87),
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: rgba(black, 0.87),
+    A700: rgba(white, 0.87),
+  )
+);
+
+html {
+  @include mat.theme((
+    color: (
+      primary: $custom-primary,
+      tertiary: $custom-primary,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  @include library-background;
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+}
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Custom global styles */
+.main-content {
+  min-height: calc(100vh - 64px);
+  @include library-background;
+  backdrop-filter: blur(2px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+/* Melhorar legibilidade dos cards sobre a imagem de fundo */
+mat-card {
+  background-color: rgba(248, 238, 220, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(184, 149, 106, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+}
+
+/* Ajustar toolbar para melhor contraste */
+mat-toolbar {
+  background-color: rgba(184, 149, 106, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Aplicar background em todos os componentes */
+app-home,
+app-search-page,
+app-event-page,
+app-edition-page,
+app-author-page,
+app-login-page,
+app-manage-events,
+app-manage-editions,
+app-manage-articles,
+app-batch-upload {
+  display: block;
+  min-height: 100vh;
+  @include library-background;
+}
+
+/* Estilos para containers com background */
+.page-container {
+  min-height: 100vh;
+  @include library-background;
+  padding: 20px 0;
+}
+
+/* Estilos globais para botões */
+button[mat-raised-button] {
+  &:not(.mat-mdc-raised-button) {
+    background-color: rgba(184, 149, 106, 0.9) !important;
+    color: white !important;
+
+    &:hover {
+      background-color: rgba(184, 149, 106, 1) !important;
+    }
+  }
+}
+
+button[mat-stroked-button] {
+  border-color: rgba(184, 149, 106, 0.8) !important;
+  color: #b8956a !important;
+
+  &:hover {
+    background-color: rgba(184, 149, 106, 0.1) !important;
+  }
+}
+
+/* Melhorar contraste dos textos */
+h1, h2, h3, h4, h5, h6 {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para formulários */
+mat-form-field {
+  .mat-mdc-form-field-input-control input {
+    color: #333 !important;
+  }
+}
+
+/* Estilos para páginas de administração */
+.admin-table, .editions-table, .articles-table, .batch-upload-table {
+  width: 100%;
+  background: rgba(248, 238, 220, 0.95) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  padding: 16px !important;
+  border: 1px solid rgba(184, 149, 106, 0.3) !important;
+  margin-bottom: 24px;
+}
+
+.admin-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}

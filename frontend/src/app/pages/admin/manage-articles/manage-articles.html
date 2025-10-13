@@ -1,0 +1,70 @@
+<div class="container">
+  <h1>Gerenciamento de Artigos</h1>
+
+  <div class="filters-section">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filtrar por Evento</mat-label>
+      <mat-select [(value)]="selectedEventId" (selectionChange)="onEventChange()">
+        <mat-option value="">Todos os eventos</mat-option>
+        <mat-option *ngFor="let event of events" [value]="event.id">
+          {{ event.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filtrar por Edição</mat-label>
+      <mat-select [(value)]="selectedEditionId" (selectionChange)="onEditionChange()">
+        <mat-option value="">Todas as edições</mat-option>
+        <mat-option *ngFor="let edition of getAvailableEditions()" [value]="edition.id">
+          {{ edition.year }} - Edição {{ edition.numero }} ({{ edition.cidadeSede }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="actions-bar">
+    <button mat-raised-button color="primary" (click)="openDialog()">
+      Novo Artigo
+    </button>
+  </div>
+
+  <mat-table [dataSource]="dataSource" class="articles-table">
+    <!-- Coluna Título -->
+    <ng-container matColumnDef="titulo">
+      <th mat-header-cell *matHeaderCellDef>Título</th>
+      <td mat-cell *matCellDef="let article" class="title-cell">{{ article.title }}</td>
+    </ng-container>
+
+    <!-- Coluna Autores -->
+    <ng-container matColumnDef="autores">
+      <th mat-header-cell *matHeaderCellDef>Autores</th>
+      <td mat-cell *matCellDef="let article">{{ article.authors.join(', ') }}</td>
+    </ng-container>
+
+    <!-- Coluna Edição -->
+    <ng-container matColumnDef="edicao">
+      <th mat-header-cell *matHeaderCellDef>Edição</th>
+      <td mat-cell *matCellDef="let article">{{ getEditionInfo(article.eventEditionId!) }}</td>
+    </ng-container>
+
+    <!-- Coluna Ações -->
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let article">
+        <button mat-icon-button color="warn" (click)="deleteArticle(article.id!)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </mat-table>
+
+  <div class="empty-state" *ngIf="dataSource.data.length === 0">
+    <mat-icon>article</mat-icon>
+    <h3>Nenhum artigo encontrado</h3>
+    <p>Adicione novos artigos ou ajuste os filtros de busca.</p>
+  </div>
+</div>

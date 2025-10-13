@@ -1,0 +1,15 @@
+<div class="admin-layout">
+  <mat-toolbar color="accent">
+    <span>Painel Administrativo</span>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/admin/eventos">Eventos</button>
+    <button mat-button routerLink="/admin/edicoes">Edições</button>
+    <button mat-button routerLink="/admin/artigos">Artigos</button>
+    <button mat-button routerLink="/admin/artigos/batch">Upload em Lote</button>
+    <button mat-button (click)="logout()">Sair</button>
+  </mat-toolbar>
+
+  <div class="admin-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

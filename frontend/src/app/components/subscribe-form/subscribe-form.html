@@ -1,0 +1,32 @@
+<div class="subscribe-container">
+  <div class="subscribe-info">
+    <h4>Receba Notificações</h4>
+    <p>Seja notificado sempre que novos artigos forem publicados com seu nome como autor.</p>
+  </div>
+
+  <form [formGroup]="subscribeForm" (ngSubmit)="onSubmit()" class="subscribe-form">
+    <mat-form-field appearance="outline" class="email-field">
+      <mat-label>Seu email</mat-label>
+      <input
+        matInput
+        formControlName="email"
+        placeholder="exemplo@email.com"
+        type="email"
+        [disabled]="isSubmitting">
+      <mat-hint *ngIf="!subscribeForm.get('email')?.hasError('email') && !subscribeForm.get('email')?.hasError('required')">
+        Prometemos não enviar spam!
+      </mat-hint>
+      <mat-error>{{ getErrorMessage() }}</mat-error>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="subscribeForm.invalid || isSubmitting"
+      class="subscribe-button">
+      <span *ngIf="!isSubmitting">Inscrever-se</span>
+      <span *ngIf="isSubmitting">Processando...</span>
+    </button>
+  </form>
+</div>
