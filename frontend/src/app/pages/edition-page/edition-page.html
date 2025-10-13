@@ -36,10 +36,10 @@
           <div class="article-number">{{ i + 1 }}</div>
           <div class="article-content">
             <h3 class="article-title">
-              <a (click)="openPdf(article.pdfUrl!)" *ngIf="article.pdfUrl" class="pdf-link">
+              <a (click)="openPdf(article.id!)" *ngIf="article.id" class="pdf-link" style="cursor: pointer;">
                 {{ article.title }}
               </a>
-              <span *ngIf="!article.pdfUrl" class="title-no-link">
+              <span *ngIf="!article.id" class="title-no-link">
                 {{ article.title }}
               </span>
             </h3>
@@ -49,11 +49,11 @@
             </p>
             <div class="article-meta">
               <span class="pages" *ngIf="article.pages">Páginas: {{ article.pages }}</span>
-              <span class="pdf-status" *ngIf="article.pdfUrl">
+              <span class="pdf-status" *ngIf="article.id">
                 <mat-icon>picture_as_pdf</mat-icon>
                 PDF disponível
               </span>
-              <span class="no-pdf" *ngIf="!article.pdfUrl">
+              <span class="no-pdf" *ngIf="!article.id">
                 <mat-icon>description</mat-icon>
                 PDF não disponível
               </span>
@@ -61,8 +61,8 @@
           </div>
           <button
             mat-icon-button
-            (click)="openPdf(article.pdfUrl!)"
-            *ngIf="article.pdfUrl"
+            (click)="openPdf(article.id!)"
+            *ngIf="article.id"
             class="pdf-button"
             matTooltip="Abrir PDF">
             <mat-icon>open_in_new</mat-icon>

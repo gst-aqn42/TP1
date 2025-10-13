@@ -2,10 +2,11 @@ from datetime import datetime
 from app.services.database import mongo
 
 class Usuario:
-    def __init__(self, email, nome, is_admin=False):
+    def __init__(self, email, nome, is_admin=False, senha=None):
         self.email = email
         self.nome = nome
         self.is_admin = is_admin
+        self.senha = senha  # Em produção, use hash de senha
         self.data_criacao = datetime.utcnow()
         self.preferences = {
             'notificacoes_email': True,
@@ -22,6 +23,8 @@ class Usuario:
             'data_criacao': self.data_criacao,
             'preferences': self.preferences
         }
+        if self.senha:
+            usuario_data['senha'] = self.senha
         return usuarios_collection.insert_one(usuario_data)
 
     @staticmethod

@@ -1,1 +1,36 @@
-<p>events works!</p>
+<div class="container">
+  <h1>Todos os Eventos</h1>
+  <p class="subtitle">Explore todos os eventos acadêmicos cadastrados</p>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p>Carregando eventos...</p>
+  </div>
+
+  <div class="events-grid" *ngIf="!loading && events.length > 0">
+    <mat-card *ngFor="let event of events" 
+              class="event-card"
+              (click)="navigateToEvent(event.id!, event.sigla!)"
+              style="cursor: pointer;">
+      <mat-card-header>
+        <mat-card-title>{{ event.name }}</mat-card-title>
+        <mat-card-subtitle>{{ event.sigla }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ event.description }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">
+          <mat-icon>visibility</mat-icon>
+          Ver Detalhes
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && events.length === 0">
+    <mat-icon>event_busy</mat-icon>
+    <h3>Nenhum evento encontrado</h3>
+    <p>Ainda não há eventos cadastrados no sistema.</p>
+  </div>
+</div>

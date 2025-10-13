@@ -13,11 +13,11 @@ export class ApiService {
 
   // Eventos
   getEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.baseUrl}/eventos`);
+    return this.http.get<Event[]>(`${this.baseUrl}/eventos/`);
   }
 
   createEvent(data: Partial<Event>): Observable<Event> {
-    return this.http.post<Event>(`${this.baseUrl}/eventos`, data);
+    return this.http.post<Event>(`${this.baseUrl}/eventos/`, data);
   }
 
   updateEvent(id: string, data: Partial<Event>): Observable<Event> {
@@ -29,6 +29,10 @@ export class ApiService {
   }
 
   // Edições
+  getEditions(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/edicoes/`);
+  }
+
   getEditionsByEvent(eventId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/edicoes/evento/${eventId}`);
   }

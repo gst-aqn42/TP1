@@ -39,9 +39,12 @@ export class ArticleDialog implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ArticleDialogData
   ) {
     this.editions = data.editions;
+    
+    console.log('📖 Article dialog opened with editions:', this.editions);
+    console.log('🎯 Selected edition ID:', (data as any).selectedEditionId);
 
     this.articleForm = this.fb.group({
-      eventEditionId: ['', Validators.required],
+      eventEditionId: [(data as any).selectedEditionId || '', Validators.required],
       title: ['', Validators.required],
       authors: ['', Validators.required],
       abstract: [''],
@@ -64,32 +67,61 @@ export class ArticleDialog implements OnInit {
   }
 
   onSave(): void {
+    console.log('💾 Saving article, form valid:', this.articleForm.valid);
+    console.log('📄 Form values:', this.articleForm.value);
+    console.log('📎 Selected file:', this.selectedFile);
+    
     if (this.articleForm.valid && this.selectedFile) {
       const formData = new FormData();
 
-      // Adiciona todos os campos do formulário
-      Object.keys(this.articleForm.value).forEach(key => {
-        const value = this.articleForm.value[key];
-        if (value) {
-          if (key === 'authors') {
-            // Converte string de autores em array
-            formData.append(key, JSON.stringify(value.split(',').map((author: string) => author.trim())));
-          } else if (key === 'keywords') {
-            // Converte string de keywords em array
-            formData.append(key, JSON.stringify(value.split(',').map((keyword: string) => keyword.trim())));
-          } else {
-            formData.append(key, value);
-          }
-        }
-      });
+      // Get the edition ID
+      const editionId = this.articleForm.value.eventEditionId;
+      
+      // Add titulo (title)
+      if (this.articleForm.value.title) {
+        formData.append('titulo', this.articleForm.value.title);
+      }
+      
+      // Add autores (authors) as JSON array
+      if (this.articleForm.value.authors) {
+        const authorsArray = this.articleForm.value.authors
+          .split(',')
+          .map((author: string) => author.trim());
+        formData.append('autores', JSON.stringify(authorsArray));
+      }
+      
+      // Add edicao_id (edition ID) - critical field!
+      if (editionId) {
+        formData.append('edicao_id', editionId);
+        console.log('✅ Added edicao_id to FormData:', editionId);
+      } else {
+        console.error('❌ No edition ID selected!');
+      }
+      
+      // Add resumo (abstract)
+      if (this.articleForm.value.abstract) {
+        formData.append('resumo', this.articleForm.value.abstract);
+      }
+      
+      // Add keywords as JSON array
+      if (this.articleForm.value.keywords) {
+        const keywordsArray = this.articleForm.value.keywords
+          .split(',')
+          .map((keyword: string) => keyword.trim());
+        formData.append('keywords', JSON.stringify(keywordsArray));
+      }
 
-      // Adiciona o arquivo PDF
+      // Add PDF file
       formData.append('pdf', this.selectedFile);
 
+      console.log('✅ Closing dialog with FormData');
       this.dialogRef.close(formData);
     } else {
       if (!this.selectedFile) {
+        console.log('❌ No PDF file selected');
         alert('Por favor, selecione um arquivo PDF.');
+      } else {
+        console.log('❌ Form invalid, errors:', this.articleForm.errors);
       }
     }
   }

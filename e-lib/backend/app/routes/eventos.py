@@ -6,6 +6,7 @@ from bson import ObjectId
 eventos_bp = Blueprint('eventos', __name__)
 
 @eventos_bp.route('/', methods=['GET'])
+@eventos_bp.route('', methods=['GET'])
 def listar_eventos():
     """Lista todos os eventos"""
     try:
@@ -15,6 +16,7 @@ def listar_eventos():
         return jsonify({'error': str(e)}), 500
 
 @eventos_bp.route('/', methods=['POST'])
+@eventos_bp.route('', methods=['POST'])
 @auth_service.admin_required
 def criar_evento():
     """Cria um novo evento (apenas admin)"""
@@ -62,6 +64,7 @@ def atualizar_evento(evento_id):
     """Atualiza um evento (apenas admin)"""
     try:
         data = request.get_json()
+        print(f"📝 Atualizando evento {evento_id} com dados: {data}")
         
         if not data:
             return jsonify({'error': 'Dados de atualização necessários'}), 400
@@ -74,13 +77,18 @@ def atualizar_evento(evento_id):
         if 'descricao' in data:
             update_data['descricao'] = data['descricao']
         
+        print(f"✅ Dados a atualizar: {update_data}")
         result = Evento.update(evento_id, update_data)
+        print(f"💾 Resultado: modified_count={result.modified_count}")
         
         if result.modified_count > 0:
             return jsonify({'message': 'Evento atualizado com sucesso'})
         else:
             return jsonify({'error': 'Evento não encontrado ou nenhuma alteração feita'}), 404
     except Exception as e:
+        print(f"❌ Erro ao atualizar evento: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @eventos_bp.route('/<evento_id>', methods=['DELETE'])
@@ -88,13 +96,18 @@ def atualizar_evento(evento_id):
 def deletar_evento(evento_id):
     """Deleta um evento (apenas admin)"""
     try:
+        print(f"🗑️  Tentando deletar evento: {evento_id}")
         result = Evento.delete(evento_id)
+        print(f"💾 Resultado: deleted_count={result.deleted_count}")
         
         if result.deleted_count > 0:
             return jsonify({'message': 'Evento deletado com sucesso'})
         else:
             return jsonify({'error': 'Evento não encontrado'}), 404
     except Exception as e:
+        print(f"❌ Erro ao deletar evento: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 # Rota de teste

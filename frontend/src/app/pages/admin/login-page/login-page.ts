@@ -38,20 +38,36 @@ export class LoginPage {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const credentials = this.loginForm.value;
+      const credentials = {
+        username: this.loginForm.value.username,
+        password: this.loginForm.value.password
+      };
 
-      if (this.authService.login(credentials)) {
-        this.snackBar.open('Login realizado com sucesso!', 'Fechar', {
-          duration: 3000,
-          panelClass: ['success-snackbar']
-        });
-        this.router.navigate(['/admin/eventos']);
-      } else {
-        this.snackBar.open('Usuário ou senha inválidos', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar']
-        });
-      }
+      // Usar API real de autenticação
+      this.authService.login(credentials).subscribe({
+        next: (response: any) => {
+          console.log('Login bem-sucedido:', response);
+          
+          this.snackBar.open('Login realizado com sucesso!', 'Fechar', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          
+          // Redirecionar para admin
+          setTimeout(() => {
+            this.router.navigate(['/admin/eventos']);
+          }, 500);
+        },
+        error: (err) => {
+          console.error('Erro no login:', err);
+          const errorMessage = err.error?.error || 'Erro ao fazer login. Use admin/admin';
+          
+          this.snackBar.open(errorMessage, 'Fechar', {
+            duration: 5000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      });
     }
   }
 }

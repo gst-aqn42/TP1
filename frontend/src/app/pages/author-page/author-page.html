@@ -48,10 +48,10 @@
               <div class="article-number">{{ i + 1 }}</div>
               <div class="article-content">
                 <h3 class="article-title">
-                  <a (click)="openPdf(article.pdfUrl!)" *ngIf="article.pdfUrl" class="pdf-link">
+                  <a (click)="openPdf(article.id!)" *ngIf="article.id" class="pdf-link" style="cursor: pointer;">
                     {{ article.title }}
                   </a>
-                  <span *ngIf="!article.pdfUrl" class="title-no-link">
+                  <span *ngIf="!article.id" class="title-no-link">
                     {{ article.title }}
                   </span>
                 </h3>

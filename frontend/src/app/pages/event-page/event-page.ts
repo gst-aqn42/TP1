@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiService } from '../../services/api';
 import { Event, EventEdition } from '../../models/event.model';
 
@@ -12,11 +13,11 @@ import { Event, EventEdition } from '../../models/event.model';
   selector: 'app-event-page',
   imports: [
     CommonModule,
-    RouterLink,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './event-page.html',
   styleUrl: './event-page.scss'
@@ -26,6 +27,13 @@ export class EventPage implements OnInit {
   editions: EventEdition[] = [];
   loading = true;
   eventSigla: string = '';
+  
+  // Estatísticas
+  totalArticles = 0;
+  firstEditionYear: number | null = null;
+  lastEditionYear: number | null = null;
+  uniqueLocations = 0;
+  editionYearsRange = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -43,88 +51,101 @@ export class EventPage implements OnInit {
   loadEventDetails(): void {
     this.loading = true;
 
-    // Simula busca do evento por sigla
-    const mockEvents: Event[] = [
-      {
-        id: '1',
-        name: 'Simpósio Brasileiro de Engenharia de Software',
-        sigla: 'SBES',
-        description: 'O SBES é o principal evento científico da área de Engenharia de Software no Brasil, sendo promovido anualmente pela Sociedade Brasileira de Computação (SBC).'
+    // Buscar todos os eventos e filtrar pela sigla
+    this.apiService.getEvents().subscribe({
+      next: (response: any) => {
+        const eventos = response.eventos || [];
+        const eventoEncontrado = eventos.find((e: any) => 
+          e.sigla?.toLowerCase() === this.eventSigla.toLowerCase()
+        );
+
+        if (eventoEncontrado) {
+          this.event = {
+            id: eventoEncontrado._id,
+            name: eventoEncontrado.nome,
+            sigla: eventoEncontrado.sigla,
+            description: eventoEncontrado.descricao || 'Sem descrição disponível'
+          };
+          this.loadEditions(this.event.id!);
+        } else {
+          console.error('Evento não encontrado:', this.eventSigla);
+          this.event = null;
+          this.loading = false;
+        }
       },
-      {
-        id: '2',
-        name: 'Conferência Brasileira de Software',
-        sigla: 'CBS',
-        description: 'A CBS é uma conferência dedicada à inovação em software e tecnologias emergentes.'
+      error: (err) => {
+        console.error('Erro ao carregar evento:', err);
+        this.event = null;
+        this.loading = false;
       }
-    ];
+    });
+  }
 
-    this.event = mockEvents.find(e =>
-      e.sigla?.toLowerCase() === this.eventSigla.toLowerCase()
-    ) || null;
+  loadEditions(eventId: string): void {
+    // Buscar edições do evento
+    this.apiService.getEditions().subscribe({
+      next: (response: any) => {
+        const todasEdicoes = response.edicoes || [];
+        
+        // Filtrar edições do evento específico
+        const edicoesDoEvento = todasEdicoes.filter((ed: any) => 
+          ed.evento_id === eventId
+        );
 
-    if (this.event) {
-      this.loadEditions();
-    } else {
-      this.loading = false;
+        this.editions = edicoesDoEvento.map((ed: any) => ({
+          id: ed._id,
+          eventId: eventId,
+          year: ed.ano,
+          location: ed.local || 'Local não informado',
+          articleCount: ed.total_artigos || 0
+        })).sort((a: any, b: any) => b.year - a.year); // Ordenar por ano decrescente
+
+        this.calculateStatistics();
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error('Erro ao carregar edições:', err);
+        this.editions = [];
+        this.loading = false;
+      }
+    });
+  }
+
+  calculateStatistics(): void {
+    if (this.editions.length === 0) {
+      return;
+    }
+
+    // Total de artigos
+    this.totalArticles = this.editions.reduce((sum, ed) => sum + (ed.articleCount || 0), 0);
+
+    // Anos
+    const years = this.editions.map(ed => ed.year).sort((a, b) => a - b);
+    this.firstEditionYear = years[0];
+    this.lastEditionYear = years[years.length - 1];
+    
+    // Range de anos
+    if (this.firstEditionYear && this.lastEditionYear) {
+      const range = this.lastEditionYear - this.firstEditionYear;
+      this.editionYearsRange = range === 0 ? 'Novo evento' : `${range + 1} anos`;
+    }
+
+    // Localidades únicas
+    const locations = new Set(
+      this.editions
+        .map(ed => ed.location)
+        .filter(loc => loc && loc !== 'Local não informado')
+    );
+    this.uniqueLocations = locations.size;
+  }
+
+  navigateToEdition(year: number): void {
+    if (this.eventSigla) {
+      this.router.navigate(['/eventos', this.eventSigla, year]);
     }
   }
 
-  loadEditions(): void {
-    if (!this.event) return;
-
-    // Simula busca das edições do evento
-    const mockEditions: EventEdition[] = [
-      {
-        id: '1',
-        eventId: '1',
-        year: 2024,
-        numero: 37,
-        cidadeSede: 'Curitiba',
-        description: '37ª edição do SBES realizada em Curitiba'
-      },
-      {
-        id: '2',
-        eventId: '1',
-        year: 2023,
-        numero: 36,
-        cidadeSede: 'Campo Grande',
-        description: '36ª edição do SBES realizada em Campo Grande'
-      },
-      {
-        id: '3',
-        eventId: '1',
-        year: 2022,
-        numero: 35,
-        cidadeSede: 'Uberlândia',
-        description: '35ª edição do SBES realizada em Uberlândia'
-      },
-      {
-        id: '4',
-        eventId: '2',
-        year: 2024,
-        numero: 15,
-        cidadeSede: 'São Paulo',
-        description: '15ª edição da CBS realizada em São Paulo'
-      },
-      {
-        id: '5',
-        eventId: '2',
-        year: 2023,
-        numero: 14,
-        cidadeSede: 'Rio de Janeiro',
-        description: '14ª edição da CBS realizada no Rio de Janeiro'
-      }
-    ];
-
-    this.editions = mockEditions
-      .filter(edition => edition.eventId === this.event!.id)
-      .sort((a, b) => b.year - a.year); // Ordena por ano decrescente
-
-    this.loading = false;
-  }
-
-  navigateToEdition(edition: EventEdition): void {
-    this.router.navigate(['/eventos', this.eventSigla, edition.year]);
+  goBack(): void {
+    this.router.navigate(['/events']);
   }
 }

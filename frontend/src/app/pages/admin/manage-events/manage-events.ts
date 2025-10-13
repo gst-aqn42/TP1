@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService } from '../../../services/api';
 import { Event } from '../../../models/event.model';
 import { EventDialog } from '../../../components/dialogs/event-dialog/event-dialog';
@@ -17,7 +18,8 @@ import { EventDialog } from '../../../components/dialogs/event-dialog/event-dial
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltipModule
   ],
   templateUrl: './manage-events.html',
   styleUrl: './manage-events.scss'
@@ -37,10 +39,14 @@ export class ManageEvents implements OnInit {
   }
 
   loadEvents(): void {
+    console.log('🔍 Carregando eventos...');
     this.apiService.getEvents().subscribe({
       next: (response: any) => {
+        console.log('📦 Resposta do backend:', response);
         // Backend retorna { eventos: [...] }
         const events = response.eventos || [];
+        console.log(`✅ Encontrados ${events.length} eventos`);
+        
         // Mapear campos do backend para frontend
         this.dataSource.data = events.map((e: any) => ({
           id: e._id,
@@ -48,9 +54,11 @@ export class ManageEvents implements OnInit {
           sigla: e.sigla,
           description: e.descricao
         }));
+        
+        console.log('📊 Dados da tabela:', this.dataSource.data);
       },
       error: (err) => {
-        console.error('Erro ao carregar eventos:', err);
+        console.error('❌ Erro ao carregar eventos:', err);
         this.snackBar.open('Erro ao carregar eventos', 'Fechar', {
           duration: 3000
         });

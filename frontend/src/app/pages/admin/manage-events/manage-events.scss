@@ -85,3 +85,44 @@ h1 {
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+
+.table-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 48px 24px;
+  background: rgba(248, 238, 220, 0.95);
+  border-radius: 8px;
+  border: 1px solid rgba(184, 149, 106, 0.3);
+  
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: rgba(102, 126, 234, 0.5);
+    margin-bottom: 16px;
+  }
+  
+  p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 24px;
+  }
+  
+  button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    
+    &:hover {
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+      transform: translateY(-2px);
+    }
+  }
+}

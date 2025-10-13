@@ -48,7 +48,10 @@
       Eventos em Destaque
     </h2>
     <div class="events-grid">
-      <mat-card *ngFor="let event of topEvents; let i = index" class="event-card">
+      <mat-card *ngFor="let event of topEvents; let i = index" 
+                class="event-card"
+                (click)="navigateToEvent(event.id!, event.sigla!)"
+                style="cursor: pointer;">
         <mat-card-header>
           <div class="event-number">{{ i + 1 }}</div>
           <mat-card-title class="event-title">{{ event.name }}</mat-card-title>

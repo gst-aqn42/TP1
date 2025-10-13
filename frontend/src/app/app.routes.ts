@@ -1,6 +1,7 @@
  import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
 import { SearchPage } from './pages/search-page/search-page';
+import { Events } from './pages/events/events';
 import { LoginPage as AdminLoginPage } from './pages/admin/login-page/login-page';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { ManageEvents as AdminManageEvents } from './pages/admin/manage-events/manage-events';
@@ -20,7 +21,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: 'home', component: Home },
-      { path: 'pesquisa', component: SearchPage },
+      { path: 'search', component: SearchPage },
+      { path: 'pesquisa', redirectTo: '/search', pathMatch: 'full' },
+      { path: 'events', component: Events },
+      { path: 'event/:sigla', component: EventPage },
       { path: 'eventos/:sigla', component: EventPage },
       { path: 'eventos/:sigla/:ano', component: EditionPage },
       { path: 'autores/:nome', component: AuthorPage }

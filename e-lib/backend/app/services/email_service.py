@@ -55,3 +55,42 @@ class EmailService:
 
 # Instância global
 email_service = EmailService()
+
+def enviar_email_confirmacao_inscricao(email):
+    """Envia email de confirmação de inscrição"""
+    try:
+        subject = "Confirmação de Inscrição - SimpleLib"
+        body = f"""
+        Olá!
+
+        Obrigado por se inscrever para receber notificações da SimpleLib!
+
+        Você receberá notificações por email sempre que novos artigos forem publicados.
+
+        Se você não solicitou esta inscrição, pode ignorar este email.
+
+        Atenciosamente,
+        Equipe SimpleLib
+        """
+        
+        print(f"📧 Simulando envio de email de confirmação para: {email}")
+        print(f"Assunto: {subject}")
+        print(f"Conteúdo: {body}")
+        
+        # Em ambiente real, enviar email de verdade:
+        # msg = MIMEMultipart()
+        # msg['From'] = email_service.email_user
+        # msg['To'] = email
+        # msg['Subject'] = subject
+        # msg.attach(MIMEText(body, 'plain'))
+        # 
+        # with smtplib.SMTP(email_service.smtp_server, email_service.smtp_port) as server:
+        #     server.starttls()
+        #     server.login(email_service.email_user, email_service.email_password)
+        #     server.send_message(msg)
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Erro ao enviar email de confirmação: {e}")
+        return False

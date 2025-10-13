@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -9,17 +10,18 @@ import { Observable, tap } from 'rxjs';
 export class AuthService {
   private readonly TOKEN_KEY = 'admin_token';
   private readonly baseUrl = 'http://localhost:5000/api';
+  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private router: Router,
     private http: HttpClient
   ) { }
 
-  // Login simples com email (para trabalho acadêmico)
-  login(credentials: { email: string }): Observable<any> {
+  // Login com username e senha
+  login(credentials: { username: string; password: string } | { email: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/login`, credentials).pipe(
       tap((response: any) => {
-        if (response.token) {
+        if (response.token && isPlatformBrowser(this.platformId)) {
           localStorage.setItem(this.TOKEN_KEY, response.token);
         }
       })
@@ -27,16 +29,24 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.TOKEN_KEY);
+    }
     this.router.navigate(['/']);
   }
 
   isAuthenticated(): boolean {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    return token !== null;
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem(this.TOKEN_KEY);
+      return token !== null;
+    }
+    return false;
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(this.TOKEN_KEY);
+    }
+    return null;
   }
 }

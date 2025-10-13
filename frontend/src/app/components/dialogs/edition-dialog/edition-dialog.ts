@@ -37,8 +37,11 @@ export class EditionDialog implements OnInit {
     private dialogRef: MatDialogRef<EditionDialog>,
     @Inject(MAT_DIALOG_DATA) public data: EditionDialogData
   ) {
+    console.log('🎬 EditionDialog construtor - data recebida:', data);
     this.isEditMode = !!data.edition;
     this.events = data.events;
+    console.log('📋 Eventos no dialog:', this.events);
+    console.log('📊 Quantidade de eventos:', this.events.length);
 
     this.editionForm = this.fb.group({
       eventId: ['', Validators.required],

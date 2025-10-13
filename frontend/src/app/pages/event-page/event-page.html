@@ -1,50 +1,134 @@
+<div class="loading-container" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+  <p>Carregando evento...</p>
+</div>
+
 <div class="container" *ngIf="!loading">
   <div class="breadcrumb">
-    <a routerLink="/pesquisa">Home</a>
+    <a (click)="goBack()" style="cursor: pointer;">Eventos</a>
     <mat-icon>chevron_right</mat-icon>
     <span>{{ event?.sigla }}</span>
   </div>
 
   <div class="event-header" *ngIf="event">
+    <div class="event-badge">{{ event.sigla }}</div>
     <h1>{{ event.name }}</h1>
-    <h2 class="event-sigla">{{ event.sigla }}</h2>
     <p class="event-description">{{ event.description }}</p>
   </div>
 
-  <mat-card class="editions-card" *ngIf="event">
+  <!-- Estatísticas do Evento -->
+  <div class="event-stats" *ngIf="event">
+    <mat-card class="stat-card">
+      <mat-icon class="stat-icon">calendar_month</mat-icon>
+      <div class="stat-value">{{ editions.length }}</div>
+      <div class="stat-label">Edições</div>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-icon class="stat-icon">article</mat-icon>
+      <div class="stat-value">{{ totalArticles }}</div>
+      <div class="stat-label">Artigos Publicados</div>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-icon class="stat-icon">history</mat-icon>
+      <div class="stat-value">{{ editionYearsRange }}</div>
+      <div class="stat-label">Anos de História</div>
+    </mat-card>
+  </div>
+
+  <!-- Informações Detalhadas -->
+  <mat-card class="info-card" *ngIf="event">
     <mat-card-header>
-      <mat-card-title>Edições do {{ event.sigla }}</mat-card-title>
-      <mat-card-subtitle>Clique em uma edição para ver os artigos publicados</mat-card-subtitle>
+      <mat-icon mat-card-avatar class="header-icon">info</mat-icon>
+      <mat-card-title>Sobre o Evento</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="editions-grid">
-        <div
-          class="edition-item"
-          *ngFor="let edition of editions"
-          (click)="navigateToEdition(edition)">
-          <div class="edition-year">{{ edition.year }}</div>
-          <div class="edition-info">
-            <h3>{{ edition.numero }}ª Edição</h3>
-            <p class="location">
-              <mat-icon>location_on</mat-icon>
-              {{ edition.cidadeSede }}
-            </p>
-            <p class="description" *ngIf="edition.description">
-              {{ edition.description }}
-            </p>
+      <div class="info-content">
+        <p class="full-description">{{ event.description }}</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <mat-icon>event</mat-icon>
+            <div>
+              <strong>Primeira Edição:</strong>
+              <span>{{ firstEditionYear || 'N/A' }}</span>
+            </div>
           </div>
-          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+          <div class="info-item">
+            <mat-icon>event_available</mat-icon>
+            <div>
+              <strong>Última Edição:</strong>
+              <span>{{ lastEditionYear || 'N/A' }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>public</mat-icon>
+            <div>
+              <strong>Localidades:</strong>
+              <span>{{ uniqueLocations }} cidade(s) diferente(s)</span>
+            </div>
+          </div>
         </div>
       </div>
     </mat-card-content>
   </mat-card>
 
+  <!-- Lista de Edições -->
+  <mat-card class="editions-card" *ngIf="event && editions.length > 0">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="header-icon">collections_bookmark</mat-icon>
+      <mat-card-title>Edições do {{ event.sigla }}</mat-card-title>
+      <mat-card-subtitle>Explore as edições e seus artigos científicos</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="editions-grid">
+        <mat-card
+          class="edition-card"
+          *ngFor="let edition of editions"
+          (click)="navigateToEdition(edition.year)"
+          style="cursor: pointer;">
+          <div class="edition-header">
+            <div class="edition-year-badge">{{ edition.year }}</div>
+            <div class="edition-title">
+              <h3>{{ event.sigla }} {{ edition.year }}</h3>
+              <p class="edition-subtitle">Edição {{ edition.year }}</p>
+            </div>
+          </div>
+          
+          <mat-divider></mat-divider>
+          
+          <div class="edition-details">
+            <div class="detail-item">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ edition.location }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon>description</mat-icon>
+              <span>{{ edition.articleCount }} artigo(s) publicado(s)</span>
+            </div>
+          </div>
+          
+          <button mat-button class="view-edition-btn">
+            Ver Artigos
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="empty-editions" *ngIf="event && editions.length === 0">
+    <mat-icon>calendar_today</mat-icon>
+    <h3>Nenhuma edição cadastrada</h3>
+    <p>Este evento ainda não possui edições no sistema.</p>
+  </div>
+
   <div class="not-found" *ngIf="!event">
     <mat-icon>event_busy</mat-icon>
     <h2>Evento não encontrado</h2>
     <p>O evento com a sigla "{{ eventSigla }}" não foi encontrado.</p>
-    <button mat-raised-button color="primary" routerLink="/pesquisa">
-      Voltar à Busca
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Voltar aos Eventos
     </button>
   </div>
 </div>

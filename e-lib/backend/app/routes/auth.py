@@ -36,16 +36,32 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    """Login de usuário (simplificado - sem senha por enquanto)"""
+    """Login de usuário com username/password"""
     data = request.get_json()
     
-    if not data or not data.get('email'):
-        return jsonify({'error': 'Email é obrigatório'}), 400
+    if not data:
+        return jsonify({'error': 'Dados não fornecidos'}), 400
     
-    usuario_data = Usuario.find_by_email(data['email'])
+    username = data.get('username') or data.get('email')
+    password = data.get('password')
+    
+    if not username or not password:
+        return jsonify({'error': 'Username e senha são obrigatórios'}), 400
+    
+    # Buscar usuário - aceitar tanto 'admin' quanto 'admin@admin.com'
+    usuario_data = None
+    if username == 'admin':
+        usuario_data = Usuario.find_by_email('admin@admin.com')
+    else:
+        usuario_data = Usuario.find_by_email(username)
     
     if not usuario_data:
         return jsonify({'error': 'Usuário não encontrado'}), 404
+    
+    # Verificar senha (simplificado para teste)
+    senha_db = usuario_data.get('senha', '')
+    if senha_db != password:
+        return jsonify({'error': 'Senha incorreta'}), 401
     
     # Gerar token JWT
     token = auth_service.generate_token(str(usuario_data['_id']), usuario_data.get('is_admin', False))

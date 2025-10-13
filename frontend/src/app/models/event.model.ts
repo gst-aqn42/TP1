@@ -19,6 +19,7 @@ export interface EventEdition {
   endDate?: Date;
   description?: string;
   articles?: Article[];
+  articleCount?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

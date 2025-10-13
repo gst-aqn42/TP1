@@ -30,11 +30,26 @@ class EdicaoEvento:
     def find_by_evento(evento_id):
         """Encontra todas as edições de um evento"""
         edicoes_collection = mongo.get_collection('edicoes')
-        edicoes = list(edicoes_collection.find({'evento_id': ObjectId(evento_id)}))
+        
+        # Tentar buscar com ObjectId e com string (compatibilidade com dados antigos)
+        try:
+            evento_obj_id = ObjectId(evento_id)
+            edicoes = list(edicoes_collection.find({
+                '$or': [
+                    {'evento_id': evento_obj_id},
+                    {'evento_id': str(evento_id)}
+                ]
+            }))
+        except:
+            # Se não conseguir converter para ObjectId, busca apenas como string
+            edicoes = list(edicoes_collection.find({'evento_id': str(evento_id)}))
+        
         # Converter ObjectId para string
         for edicao in edicoes:
             edicao['_id'] = str(edicao['_id'])
-            edicao['evento_id'] = str(edicao['evento_id'])
+            # Normalizar evento_id para string
+            if isinstance(edicao.get('evento_id'), ObjectId):
+                edicao['evento_id'] = str(edicao['evento_id'])
         return edicoes
     
     @staticmethod

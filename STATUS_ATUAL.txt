@@ -1,0 +1,93 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║             📊 RESUMO DO ESTADO ATUAL - e-lib                ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 ONDE ESTAMOS AGORA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CONCLUÍDO:
+   • Frontend Angular compilando sem erros
+   • MongoDB instalado e rodando
+   • Ambiente virtual Python (venv) criado e ativado
+   • Todas as correções de código aplicadas:
+     - SSR compatível (localStorage)
+     - RouterLink warnings removidos
+     - Tipos TypeScript corrigidos
+     - Interface unificada de artigos (abas)
+     - Links de PDF corrigidos
+     - Navegação de eventos funcional
+
+⚠️  EM ANDAMENTO:
+   • Terminal no diretório: /home/mostqi/EngSoft/TP1/e-lib/backend
+   • Ambiente virtual ATIVADO (venv)
+   • Pronto para instalar dependências e iniciar backend
+
+❌ PROBLEMA ATUAL:
+   • Backend Flask NÃO está rodando
+   • Frontend não consegue conectar (ECONNREFUSED 127.0.0.1:5000)
+   • Banco de dados MongoDB vazio (sem artigos/eventos)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PRÓXIMOS PASSOS (EM ORDEM):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣  INSTALAR DEPENDÊNCIAS DO BACKEND
+    No terminal atual (backend com venv ativo):
+    → pip install -r requirements.txt
+
+2️⃣  INICIAR SERVIDOR FLASK
+    → python run.py
+    Aguardar: "Running on http://127.0.0.1:5000"
+
+3️⃣  POPULAR BANCO DE DADOS (novo terminal)
+    → cd /home/mostqi/EngSoft/TP1/e-lib/backend
+    → source venv/bin/activate
+    → python seed_bibtex.py seed_data.bib
+    Resultado: 22 artigos + 2 eventos + 4 edições
+
+4️⃣  VERIFICAR FRONTEND
+    → Já está rodando em http://localhost:4200
+    → Recarregar página no navegador
+    → Console deve estar SEM erros ECONNREFUSED
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 COMANDOS PARA COPIAR/COLAR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Terminal ATUAL (backend):
+┌──────────────────────────────────────────────────────────────┐
+│ pip install -r requirements.txt                              │
+│ python run.py                                                │
+└──────────────────────────────────────────────────────────────┘
+
+Novo Terminal (seed):
+┌──────────────────────────────────────────────────────────────┐
+│ cd /home/mostqi/EngSoft/TP1/e-lib/backend                    │
+│ source venv/bin/activate                                     │
+│ python seed_bibtex.py seed_data.bib                          │
+└──────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 VERIFICAÇÃO RÁPIDA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ MongoDB:        sudo systemctl status mongod → active
+✓ Venv ativado:   echo $VIRTUAL_ENV → deve mostrar path do venv
+✓ Backend ready:  Aguardando pip install
+✓ Frontend:       http://localhost:4200 → rodando
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱️  TEMPO ESTIMADO: 3-5 minutos
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 OBJETIVO FINAL:
+   Sistema completo funcionando em http://localhost:4200
+   com dados reais do MongoDB exibidos corretamente.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

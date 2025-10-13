@@ -14,6 +14,7 @@ Deseja-se disponibilizar acesso de forma fácil aos artigos publicados em determ
 - **Linguagem Back-end:** Python
 - **Frameworks Front-end:** Angular 19 + Angular Material
 - **Banco de dados:** MongoDB
+
 - **Repositório do GitHub:** `git@github.com:gst-aqn42/TP1.git`
 - **Ferramenta de IA:** GitHub Copilot
 

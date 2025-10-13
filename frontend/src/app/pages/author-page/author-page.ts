@@ -132,9 +132,9 @@ export class AuthorPage implements OnInit {
     this.loading = false;
   }
 
-  openPdf(pdfUrl: string): void {
-    if (pdfUrl) {
-      window.open(pdfUrl, '_blank');
+  openPdf(articleId: string): void {
+    if (articleId) {
+      window.open(`http://localhost:5000/api/artigos/${articleId}/pdf`, '_blank');
     } else {
       this.snackBar.open('PDF não disponível para este artigo.', 'Fechar', {
         duration: 3000

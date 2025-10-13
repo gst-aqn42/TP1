@@ -183,3 +183,163 @@ mat-form-field {
   gap: 16px;
   margin-bottom: 24px;
 }
+
+/* Estilos para Snackbars - Mensagens Legíveis */
+.mat-mdc-snack-bar-container {
+  &.success-snackbar {
+    --mdc-snackbar-container-color: #4caf50 !important;
+    --mat-snack-bar-button-color: #ffffff !important;
+    --mdc-snackbar-supporting-text-color: #ffffff !important;
+    
+    .mdc-snackbar__surface {
+      background-color: #4caf50 !important;
+    }
+    
+    .mat-mdc-snack-bar-label {
+      color: #ffffff !important;
+      font-weight: 500;
+    }
+    
+    .mat-mdc-button {
+      color: #ffffff !important;
+    }
+  }
+  
+  &.error-snackbar {
+    --mdc-snackbar-container-color: #f44336 !important;
+    --mat-snack-bar-button-color: #ffffff !important;
+    --mdc-snackbar-supporting-text-color: #ffffff !important;
+    
+    .mdc-snackbar__surface {
+      background-color: #f44336 !important;
+    }
+    
+    .mat-mdc-snack-bar-label {
+      color: #ffffff !important;
+      font-weight: 500;
+    }
+    
+    .mat-mdc-button {
+      color: #ffffff !important;
+    }
+  }
+  
+  /* Estilo padrão para outros snackbars */
+  .mdc-snackbar__surface {
+    background-color: #323232 !important;
+    opacity: 1 !important;
+  }
+  
+  .mat-mdc-snack-bar-label {
+    color: #ffffff !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Estilos para Diálogos (MatDialog) - Fundo Opaco e Legível */
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-color: #ffffff !important;
+  background-color: #ffffff !important;
+  opacity: 1 !important;
+  
+  .mdc-dialog__surface {
+    background-color: #ffffff !important;
+    opacity: 1 !important;
+  }
+}
+
+.mat-mdc-dialog-content {
+  color: #333333 !important;
+  opacity: 1 !important;
+}
+
+.mat-mdc-dialog-title {
+  color: #333333 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Backdrop do diálogo mais escuro */
+.cdk-overlay-dark-backdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Form fields dentro dos diálogos */
+.mat-mdc-dialog-container {
+  .mat-mdc-form-field {
+    .mat-mdc-form-field-focus-overlay {
+      opacity: 0 !important;
+    }
+  }
+  
+  .mat-mdc-text-field-wrapper {
+    background-color: #ffffff !important;
+  }
+  
+  .mat-mdc-form-field-label {
+    color: #666666 !important;
+  }
+  
+  .mat-mdc-input-element {
+    color: #333333 !important;
+    caret-color: #b8956a !important;
+  }
+  
+  .mat-mdc-select-value {
+    color: #333333 !important;
+  }
+  
+  .mat-mdc-select-arrow {
+    color: #666666 !important;
+  }
+}
+
+/* Hint text legível */
+.mat-mdc-form-field-hint {
+  color: #666666 !important;
+  opacity: 1 !important;
+}
+
+/* Botões dos diálogos */
+.mat-mdc-dialog-actions {
+  .mat-mdc-button {
+    font-weight: 500 !important;
+  }
+}
+
+/* Painel de opções do mat-select (dropdown) */
+.mat-mdc-select-panel {
+  background-color: #ffffff !important;
+  opacity: 1 !important;
+  
+  .mat-mdc-option {
+    color: #333333 !important;
+    
+    &:hover {
+      background-color: #f5f5f5 !important;
+    }
+    
+    &.mat-mdc-option-active {
+      background-color: #f5f5f5 !important;
+    }
+    
+    &.mdc-list-item--selected {
+      background-color: rgba(184, 149, 106, 0.12) !important;
+      color: #b8956a !important;
+      font-weight: 500 !important;
+    }
+  }
+  
+  .mat-mdc-option-text {
+    color: inherit !important;
+  }
+}
+
+/* Overlay do select */
+.cdk-overlay-container {
+  .cdk-overlay-pane {
+    .mat-mdc-select-panel {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+    }
+  }
+}

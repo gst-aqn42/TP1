@@ -1,36 +1,46 @@
 <h1 mat-dialog-title>{{ isEditMode ? 'Editar Edição' : 'Nova Edição' }}</h1>
 
 <div mat-dialog-content>
-  <form [formGroup]="editionForm">
+  <div *ngIf="events.length === 0" style="padding: 20px; text-align: center; color: #666;">
+    <p>⚠️ Nenhum evento cadastrado.</p>
+    <p>Por favor, cadastre um evento antes de criar uma edição.</p>
+  </div>
+
+  <form [formGroup]="editionForm" *ngIf="events.length > 0">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Evento</mat-label>
       <mat-select formControlName="eventId" required>
         <mat-option *ngFor="let event of events" [value]="event.id">
-          {{ event.name }}
+          {{ event.sigla }} - {{ event.name }}
         </mat-option>
       </mat-select>
+      <mat-hint>Selecione o evento desta edição</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Ano</mat-label>
       <input matInput type="number" formControlName="year" required>
+      <mat-hint>Ano da edição (ex: 2024)</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Número</mat-label>
       <input matInput type="number" formControlName="numero" required>
+      <mat-hint>Número da edição (ex: 1, 2, 3...)</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Cidade Sede</mat-label>
       <input matInput formControlName="cidadeSede" required>
+      <mat-hint>Cidade onde o evento será realizado</mat-hint>
     </mat-form-field>
   </form>
 </div>
 
 <div mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="editionForm.invalid">
+  <button mat-raised-button color="primary" (click)="onSave()" 
+          [disabled]="editionForm.invalid || events.length === 0">
     Salvar
   </button>
 </div>

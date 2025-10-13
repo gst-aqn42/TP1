@@ -38,20 +38,30 @@ export class LoginPage {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const credentials = this.loginForm.value;
+      const credentials = {
+        email: this.loginForm.value.username  // Adaptar username para email
+      };
 
-      if (this.authService.login(credentials)) {
-        this.snackBar.open('Login realizado com sucesso!', 'Fechar', {
-          duration: 3000,
-          panelClass: ['success-snackbar']
-        });
-        this.router.navigate(['/admin']);
-      } else {
-        this.snackBar.open('Credenciais inválidas. Tente admin/admin', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar']
-        });
-      }
+      this.authService.login(credentials).subscribe({
+        next: (response) => {
+          this.snackBar.open('Login realizado com sucesso!', 'Fechar', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          
+          // Redirecionar após pequeno delay para mostrar a mensagem
+          setTimeout(() => {
+            this.router.navigate(['/admin']);
+          }, 500);
+        },
+        error: (err) => {
+          console.error('Erro no login:', err);
+          this.snackBar.open('Credenciais inválidas. Tente novamente', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      });
     }
   }
 }

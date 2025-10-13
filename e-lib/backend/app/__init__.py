@@ -4,7 +4,18 @@ import os
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
+    
+    # Configuração CORS mais permissiva para desenvolvimento
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": ["http://localhost:4200", "http://127.0.0.1:4200"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"],
+            "expose_headers": ["Content-Type", "Authorization"],
+            "supports_credentials": True,
+            "max_age": 3600
+        }
+    })
     
     # Configurações básicas
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-muito-longa-aqui-123')
@@ -31,6 +42,7 @@ def create_app():
     from app.routes.public import public_bp
     from app.routes.notificacoes import notificacoes_bp
     from app.routes.batch_upload import batch_upload_bp
+    from app.routes.inscricoes import inscricoes_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(eventos_bp, url_prefix='/api/eventos')
@@ -39,6 +51,7 @@ def create_app():
     app.register_blueprint(public_bp, url_prefix='/api/public')
     app.register_blueprint(notificacoes_bp, url_prefix='/api/notificacoes')
     app.register_blueprint(batch_upload_bp, url_prefix='/api/batch')
+    app.register_blueprint(inscricoes_bp, url_prefix='/api/inscricoes')
     
     # Rota raiz
     @app.route('/')

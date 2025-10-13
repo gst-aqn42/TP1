@@ -9,20 +9,32 @@ edicoes_bp = Blueprint('edicoes', __name__)
 def listar_edicoes_evento(evento_id):
     """Lista todas as edições de um evento"""
     try:
+        print(f"🔍 Buscando edições para evento: {evento_id}")
         edicoes = EdicaoEvento.find_by_evento(evento_id)
+        print(f"📚 Encontradas {len(edicoes)} edições")
+        for ed in edicoes:
+            print(f"  - Edição {ed.get('ano')} (ID: {ed.get('_id')})")
         return jsonify(edicoes)
     except Exception as e:
+        print(f"❌ Erro ao listar edições: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @edicoes_bp.route('/', methods=['POST'])
+@edicoes_bp.route('', methods=['POST'])
 @auth_service.admin_required
 def criar_edicao():
     """Cria uma nova edição (apenas admin)"""
     try:
         data = request.get_json()
+        print(f"📝 Dados recebidos para criar edição: {data}")
         
         if not data or not data.get('evento_id') or not data.get('ano'):
+            print(f"❌ Dados insuficientes: {data}")
             return jsonify({'error': 'evento_id e ano são obrigatórios'}), 400
+        
+        print(f"✅ Criando edição para evento {data['evento_id']}, ano {data['ano']}")
         
         edicao = EdicaoEvento(
             evento_id=data['evento_id'],
@@ -33,11 +45,16 @@ def criar_edicao():
         )
         
         result = edicao.save()
+        print(f"💾 Edição salva com ID: {result.inserted_id}")
+        
         return jsonify({
             'message': 'Edição criada com sucesso',
             'edicao_id': str(result.inserted_id)
         }), 201
     except Exception as e:
+        print(f"❌ Erro ao criar edição: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @edicoes_bp.route('/<edicao_id>', methods=['GET'])

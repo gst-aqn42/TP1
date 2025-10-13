@@ -1,89 +1,193 @@
 <div class="container">
   <h1>Gerenciamento de Artigos</h1>
 
-  <div class="filters-section">
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-label>Filtrar por Evento</mat-label>
-      <mat-select [(value)]="selectedEventId" (selectionChange)="onEventChange()">
-        <mat-option value="">Todos os eventos</mat-option>
-        <mat-option *ngFor="let event of events" [value]="event.id">
-          {{ event.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <mat-tab-group [(selectedIndex)]="selectedTab" class="articles-tabs">
+    <!-- ABA 1: Artigos Individuais -->
+    <mat-tab label="Artigos">
+      <div class="tab-content">
+        <div class="filters-section">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Filtrar por Evento</mat-label>
+            <mat-select [(value)]="selectedEventId" (selectionChange)="onEventChange()">
+              <mat-option value="">Todos os eventos</mat-option>
+              <mat-option *ngFor="let event of events" [value]="event.id">
+                {{ event.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-label>Filtrar por Edição</mat-label>
-      <mat-select [(value)]="selectedEditionId" (selectionChange)="onEditionChange()">
-        <mat-option value="">Todas as edições</mat-option>
-        <mat-option *ngFor="let edition of getAvailableEditions()" [value]="edition.id">
-          {{ edition.year }} - Edição {{ edition.numero }} ({{ edition.cidadeSede }})
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Filtrar por Edição</mat-label>
+            <mat-select [(value)]="selectedEditionId" (selectionChange)="onEditionChange()">
+              <mat-option value="">Todas as edições</mat-option>
+              <mat-option *ngFor="let edition of getAvailableEditions()" [value]="edition.id">
+                {{ edition.year }} - Edição {{ edition.numero }} ({{ edition.cidadeSede }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-  <div class="actions-bar">
-    <button mat-raised-button color="primary" (click)="openDialog()">
-      Novo Artigo
-    </button>
-  </div>
+        <div class="actions-bar">
+          <button mat-raised-button color="primary" (click)="openDialog()" [disabled]="!selectedEditionId">
+            <mat-icon>add</mat-icon>
+            Novo Artigo
+          </button>
+          <span class="hint-text" *ngIf="!selectedEditionId">
+            ⚠️ Selecione um evento e edição para criar artigos
+          </span>
+        </div>
 
-  <mat-table [dataSource]="dataSource" class="articles-table">
-    <!-- Coluna Título -->
-    <ng-container matColumnDef="titulo">
-      <th mat-header-cell *matHeaderCellDef>Título</th>
-      <td mat-cell *matCellDef="let article" class="title-cell">{{ article.title }}</td>
-    </ng-container>
+        <!-- Tabela de artigos -->
+        <div class="table-container" *ngIf="selectedEditionId">
+          <mat-table [dataSource]="dataSource" class="articles-table">
+            <!-- Coluna Título -->
+            <ng-container matColumnDef="titulo">
+              <th mat-header-cell *matHeaderCellDef>Título</th>
+              <td mat-cell *matCellDef="let article" class="title-cell">{{ article.title }}</td>
+            </ng-container>
 
-    <!-- Coluna Autores -->
-    <ng-container matColumnDef="autores">
-      <th mat-header-cell *matHeaderCellDef>Autores</th>
-      <td mat-cell *matCellDef="let article">{{ article.authors.join(', ') }}</td>
-    </ng-container>
+            <!-- Coluna Autores -->
+            <ng-container matColumnDef="autores">
+              <th mat-header-cell *matHeaderCellDef>Autores</th>
+              <td mat-cell *matCellDef="let article">{{ article.authors.join(', ') }}</td>
+            </ng-container>
 
-    <!-- Coluna Edição -->
-    <ng-container matColumnDef="edicao">
-      <th mat-header-cell *matHeaderCellDef>Edição</th>
-      <td mat-cell *matCellDef="let article">{{ getEditionInfo(article.eventEditionId!) }}</td>
-    </ng-container>
+            <!-- Coluna Edição -->
+            <ng-container matColumnDef="edicao">
+              <th mat-header-cell *matHeaderCellDef>Edição</th>
+              <td mat-cell *matCellDef="let article">{{ getEditionInfo(article.eventEditionId!) }}</td>
+            </ng-container>
 
-    <!-- Coluna PDF -->
-    <ng-container matColumnDef="pdf">
-      <th mat-header-cell *matHeaderCellDef>PDF</th>
-      <td mat-cell *matCellDef="let article">
-        <button mat-icon-button color="primary" 
-                (click)="uploadPdf(article.id!)"
-                matTooltip="Upload PDF">
-          <mat-icon>cloud_upload</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+            <!-- Coluna Ano -->
+            <ng-container matColumnDef="ano">
+              <th mat-header-cell *matHeaderCellDef>Ano</th>
+              <td mat-cell *matCellDef="let article">{{ article.year }}</td>
+            </ng-container>
 
-    <!-- Coluna Ações -->
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td mat-cell *matCellDef="let article">
-        <button mat-icon-button color="accent" 
-                (click)="editArticle(article)"
-                matTooltip="Editar">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" 
-                (click)="deleteArticle(article.id!)"
-                matTooltip="Excluir">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+            <!-- Coluna Ações -->
+            <ng-container matColumnDef="acoes">
+              <th mat-header-cell *matHeaderCellDef>Ações</th>
+              <td mat-cell *matCellDef="let article" class="actions-cell">
+                <button mat-icon-button (click)="uploadPdf(article)" matTooltip="Upload PDF">
+                  <mat-icon>cloud_upload</mat-icon>
+                </button>
+                <button mat-icon-button (click)="editArticle(article)" matTooltip="Editar">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteArticle(article.id!)" matTooltip="Excluir">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </mat-table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </mat-table>
 
-  <div class="empty-state" *ngIf="dataSource.data.length === 0">
-    <mat-icon>article</mat-icon>
-    <h3>Nenhum artigo encontrado</h3>
-    <p>Adicione novos artigos ou ajuste os filtros de busca.</p>
-  </div>
+          <!-- Mensagem quando não há artigos -->
+          <div class="no-data" *ngIf="dataSource.data.length === 0">
+            <mat-icon>article</mat-icon>
+            <p>Nenhum artigo cadastrado para esta edição</p>
+            <button mat-raised-button color="primary" (click)="openDialog()">
+              <mat-icon>add</mat-icon>
+              Criar Primeiro Artigo
+            </button>
+          </div>
+        </div>
+
+        <!-- Mensagem quando nenhuma edição está selecionada -->
+        <div class="no-selection" *ngIf="!selectedEditionId">
+          <mat-icon>info</mat-icon>
+          <h3>Selecione um Evento e Edição</h3>
+          <p>Para visualizar e gerenciar artigos, primeiro selecione um evento e uma edição nos filtros acima.</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- ABA 2: Upload em Massa -->
+    <mat-tab label="Upload em Massa">
+      <div class="tab-content batch-upload-content">
+        <mat-card class="upload-card">
+          <mat-card-header>
+            <mat-card-title>Upload de Arquivo BibTeX</mat-card-title>
+            <mat-card-subtitle>
+              Faça upload de um arquivo .bib para importar múltiplos artigos de uma só vez
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="upload-area" [class.has-file]="selectedFile" (click)="triggerFileInput()">
+              <input
+                #fileInput
+                type="file"
+                accept=".bib"
+                (change)="onFileSelected($event)"
+                style="display: none;">
+
+              <div class="upload-content" *ngIf="!selectedFile">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <h3>Clique para selecionar um arquivo</h3>
+                <p>ou arraste e solte um arquivo .bib aqui</p>
+                <small>Formatos aceitos: .bib (BibTeX)</small>
+                <small>Arquivo de exemplo: <code>/e-lib/backend/seed_data.bib</code></small>
+              </div>
+
+              <div class="file-selected" *ngIf="selectedFile">
+                <mat-icon class="file-icon">description</mat-icon>
+                <div class="file-details">
+                  <h4>{{ selectedFile.name }}</h4>
+                  <p>{{ getFileSize() }}</p>
+                </div>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="removeFile(); $event.stopPropagation()"
+                  class="remove-button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="upload-progress" *ngIf="isUploading">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              <p>Processando arquivo BibTeX...</p>
+            </div>
+
+            <div class="info-section">
+              <h4>📋 Informações sobre o formato BibTeX:</h4>
+              <ul>
+                <li>O arquivo deve conter entradas válidas do BibTeX</li>
+                <li>Cada entrada deve ter pelo menos título e autor</li>
+                <li>Campos suportados: title, author, year, pages, doi, abstract, keywords</li>
+                <li>Os artigos serão associados automaticamente às edições quando possível</li>
+                <li>Eventos e edições serão criados automaticamente se não existirem</li>
+              </ul>
+              
+              <h4>📁 Arquivo de Teste:</h4>
+              <p><code>/home/mostqi/EngSoft/TP1/e-lib/backend/seed_data.bib</code></p>
+              <small>Contém 22 artigos de exemplo prontos para importação</small>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="onBatchSubmit()"
+              [disabled]="!selectedFile || isUploading">
+              <mat-icon>upload</mat-icon>
+              {{ isUploading ? 'Processando...' : 'Enviar Arquivo BibTeX' }}
+            </button>
+            
+            <button
+              mat-button
+              (click)="removeFile()"
+              [disabled]="!selectedFile || isUploading">
+              Cancelar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

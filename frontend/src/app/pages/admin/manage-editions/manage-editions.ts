@@ -46,9 +46,13 @@ export class ManageEditions implements OnInit {
   }
 
   loadEvents(): void {
+    console.log('🔄 Carregando eventos...');
     this.apiService.getEvents().subscribe({
       next: (response: any) => {
+        console.log('📦 Resposta da API de eventos:', response);
         const events = response.eventos || [];
+        console.log('📋 Eventos extraídos:', events);
+        
         this.events = events.map((e: any) => ({
           id: e._id,
           name: e.nome,
@@ -56,14 +60,19 @@ export class ManageEditions implements OnInit {
           description: e.descricao
         }));
         
+        console.log('✅ Eventos mapeados para o frontend:', this.events);
+        
         // Se houver eventos, seleciona o primeiro
         if (this.events.length > 0) {
           this.selectedEventId = this.events[0].id!;
+          console.log('✓ Evento selecionado:', this.selectedEventId);
           this.loadEditions();
+        } else {
+          console.warn('⚠️ Nenhum evento encontrado no banco de dados!');
         }
       },
       error: (err) => {
-        console.error('Erro ao carregar eventos:', err);
+        console.error('❌ Erro ao carregar eventos:', err);
         this.snackBar.open('Erro ao carregar eventos', 'Fechar', { duration: 3000 });
       }
     });
@@ -109,6 +118,22 @@ export class ManageEditions implements OnInit {
   }
 
   openDialog(data?: EventEdition): void {
+    // Garantir que os eventos estão carregados antes de abrir o dialog
+    if (this.events.length === 0) {
+      this.snackBar.open('Carregando eventos...', 'Fechar', { duration: 2000 });
+      this.loadEvents();
+      // Aguardar um pouco antes de abrir o dialog
+      setTimeout(() => {
+        this.openDialogInternal(data);
+      }, 1000);
+    } else {
+      this.openDialogInternal(data);
+    }
+  }
+
+  private openDialogInternal(data?: EventEdition): void {
+    console.log('Abrindo dialog com eventos:', this.events);
+    
     const dialogRef = this.dialog.open(EditionDialog, {
       width: '500px',
       data: {
