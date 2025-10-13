@@ -37,23 +37,25 @@ export class ManageEvents implements OnInit {
   }
 
   loadEvents(): void {
-    // Simulando dados já que não temos backend real
-    const mockEvents: Event[] = [
-      {
-        id: '1',
-        name: 'Simpósio Brasileiro de Engenharia de Software',
-        sigla: 'SBES',
-        description: 'O principal evento de engenharia de software do Brasil'
+    this.apiService.getEvents().subscribe({
+      next: (response: any) => {
+        // Backend retorna { eventos: [...] }
+        const events = response.eventos || [];
+        // Mapear campos do backend para frontend
+        this.dataSource.data = events.map((e: any) => ({
+          id: e._id,
+          name: e.nome,
+          sigla: e.sigla,
+          description: e.descricao
+        }));
       },
-      {
-        id: '2',
-        name: 'Conferência Brasileira de Software',
-        sigla: 'CBS',
-        description: 'Evento focado em inovação em software'
+      error: (err) => {
+        console.error('Erro ao carregar eventos:', err);
+        this.snackBar.open('Erro ao carregar eventos', 'Fechar', {
+          duration: 3000
+        });
       }
-    ];
-
-    this.dataSource.data = mockEvents;
+    });
   }
 
   openDialog(data?: Event): void {
@@ -76,35 +78,71 @@ export class ManageEvents implements OnInit {
   }
 
   createEvent(eventData: Event): void {
-    // Simula criação
-    eventData.id = Math.random().toString();
-    this.dataSource.data = [...this.dataSource.data, eventData];
-    this.snackBar.open('Evento criado com sucesso!', 'Fechar', {
-      duration: 3000,
-      panelClass: ['success-snackbar']
+    // Mapear campos para o backend
+    const backendData = {
+      nome: eventData.name,
+      sigla: eventData.sigla,
+      descricao: eventData.description
+    };
+
+    this.apiService.createEvent(backendData).subscribe({
+      next: (response: any) => {
+        this.snackBar.open('Evento criado com sucesso!', 'Fechar', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.loadEvents(); // Recarregar lista
+      },
+      error: (err) => {
+        console.error('Erro ao criar evento:', err);
+        this.snackBar.open('Erro ao criar evento', 'Fechar', {
+          duration: 3000
+        });
+      }
     });
   }
 
   updateEvent(id: string, eventData: Event): void {
-    // Simula atualização
-    const index = this.dataSource.data.findIndex(e => e.id === id);
-    if (index !== -1) {
-      this.dataSource.data[index] = { ...eventData, id };
-      this.dataSource.data = [...this.dataSource.data];
-      this.snackBar.open('Evento atualizado com sucesso!', 'Fechar', {
-        duration: 3000,
-        panelClass: ['success-snackbar']
-      });
-    }
+    const backendData = {
+      nome: eventData.name,
+      sigla: eventData.sigla,
+      descricao: eventData.description
+    };
+
+    this.apiService.updateEvent(id, backendData).subscribe({
+      next: () => {
+        this.snackBar.open('Evento atualizado com sucesso!', 'Fechar', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.loadEvents(); // Recarregar lista
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar evento:', err);
+        this.snackBar.open('Erro ao atualizar evento', 'Fechar', {
+          duration: 3000
+        });
+      }
+    });
   }
 
   deleteEvent(id: string): void {
     const event = this.dataSource.data.find(e => e.id === id);
     if (event && confirm(`Tem certeza que deseja excluir o evento "${event.name}"?`)) {
-      this.dataSource.data = this.dataSource.data.filter(e => e.id !== id);
-      this.snackBar.open('Evento excluído com sucesso!', 'Fechar', {
-        duration: 3000,
-        panelClass: ['success-snackbar']
+      this.apiService.deleteEvent(id).subscribe({
+        next: () => {
+          this.snackBar.open('Evento excluído com sucesso!', 'Fechar', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          this.loadEvents(); // Recarregar lista
+        },
+        error: (err) => {
+          console.error('Erro ao excluir evento:', err);
+          this.snackBar.open('Erro ao excluir evento', 'Fechar', {
+            duration: 3000
+          });
+        }
       });
     }
   }

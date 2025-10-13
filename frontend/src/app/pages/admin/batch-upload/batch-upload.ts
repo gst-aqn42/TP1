@@ -61,36 +61,45 @@ export class BatchUpload {
     }
 
     this.isUploading = true;
-    this.uploadProgress = 0;
+    this.uploadProgress = 50; // Mostra progresso inicial
 
-    // Simula upload com progress
     const formData = new FormData();
-    formData.append('bibtex', this.selectedFile);
+    formData.append('file', this.selectedFile);
 
-    // Simula progresso de upload
-    const progressInterval = setInterval(() => {
-      this.uploadProgress += Math.random() * 20;
-      if (this.uploadProgress >= 100) {
+    this.apiService.uploadBibtex(formData).subscribe({
+      next: (response: any) => {
         this.uploadProgress = 100;
-        clearInterval(progressInterval);
-
-        // Simula finalização do upload
-        setTimeout(() => {
-          this.isUploading = false;
-          this.uploadProgress = 0;
-          this.selectedFile = null;
-
-          // Reset do input file
-          const fileInput = document.getElementById('bibtex-upload') as HTMLInputElement;
-          fileInput.value = '';
-
-          this.snackBar.open('Arquivo BibTeX processado com sucesso! Artigos importados.', 'Fechar', {
-            duration: 5000,
-            panelClass: ['success-snackbar']
-          });
-        }, 500);
+        this.isUploading = false;
+        
+        const stats = response.stats;
+        const message = `✅ Upload completo!\n` +
+          `📊 ${stats.artigos_criados} artigos criados\n` +
+          `📅 ${stats.eventos_criados} eventos criados\n` +
+          `📖 ${stats.edicoes_criadas} edições criadas\n` +
+          (stats.artigos_duplicados > 0 ? `⚠️ ${stats.artigos_duplicados} duplicados ignorados` : '');
+        
+        this.snackBar.open(message, 'Fechar', {
+          duration: 8000,
+          panelClass: ['success-snackbar']
+        });
+        
+        // Reset
+        this.selectedFile = null;
+        const fileInput = document.getElementById('bibtex-upload') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+      },
+      error: (err) => {
+        console.error('Erro no upload:', err);
+        this.isUploading = false;
+        this.uploadProgress = 0;
+        
+        const errorMsg = err.error?.error || 'Erro ao processar arquivo BibTeX';
+        this.snackBar.open(`❌ ${errorMsg}`, 'Fechar', {
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
       }
-    }, 200);
+    });
   }
 
   removeFile(): void {

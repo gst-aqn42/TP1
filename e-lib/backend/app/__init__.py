@@ -30,6 +30,7 @@ def create_app():
     from app.routes.artigos import artigos_bp
     from app.routes.public import public_bp
     from app.routes.notificacoes import notificacoes_bp
+    from app.routes.batch_upload import batch_upload_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(eventos_bp, url_prefix='/api/eventos')
@@ -37,6 +38,7 @@ def create_app():
     app.register_blueprint(artigos_bp, url_prefix='/api/artigos')
     app.register_blueprint(public_bp, url_prefix='/api/public')
     app.register_blueprint(notificacoes_bp, url_prefix='/api/notificacoes')
+    app.register_blueprint(batch_upload_bp, url_prefix='/api/batch')
     
     # Rota raiz
     @app.route('/')

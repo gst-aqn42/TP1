@@ -15,12 +15,53 @@
 .filters-section {
   display: flex;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(79, 172, 254, 0.3);
+  
+  &::before {
+    content: '🔍 Filtros';
+    display: block;
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    color: #4facfe;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(79, 172, 254, 0.2);
+  }
 }
 
 .filter-field {
   min-width: 250px;
+  flex: 1;
+  
+  ::ng-deep {
+    .mat-mdc-text-field-wrapper {
+      background-color: #f8fcff !important;
+      border-radius: 8px;
+    }
+    
+    .mat-mdc-form-field-focus-overlay {
+      background-color: rgba(79, 172, 254, 0.05);
+    }
+    
+    .mat-mdc-outlined .mat-mdc-notch-piece {
+      border-color: rgba(79, 172, 254, 0.3) !important;
+    }
+    
+    .mat-mdc-form-field.mat-focused {
+      .mat-mdc-notch-piece {
+        border-color: #4facfe !important;
+        border-width: 2px !important;
+      }
+    }
+  }
 }
 
 .actions-bar {
@@ -29,6 +70,38 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  
+  // Estilizar botões principais
+  button[mat-raised-button] {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+    color: white !important;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 24px;
+    height: auto;
+    line-height: 1.5;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+  
+  // Botões secundários
+  button[mat-button], button[mat-stroked-button] {
+    font-weight: 600;
+    padding: 12px 24px;
+    height: auto;
+    line-height: 1.5;
+    border-radius: 12px;
+  }
 }
 
 .articles-table {
@@ -38,6 +111,25 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 16px;
   border: 1px solid rgba(184, 149, 106, 0.3);
+  
+  // Estilizar botões de ação na tabela
+  button[mat-icon-button] {
+    &.edit-button {
+      color: #4facfe;
+      
+      &:hover {
+        background-color: rgba(79, 172, 254, 0.1);
+      }
+    }
+    
+    &.delete-button {
+      color: #f5576c;
+      
+      &:hover {
+        background-color: rgba(245, 87, 108, 0.1);
+      }
+    }
+  }
 }
 
 .title-cell {

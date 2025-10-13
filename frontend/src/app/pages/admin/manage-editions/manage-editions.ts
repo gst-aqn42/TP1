@@ -43,44 +43,57 @@ export class ManageEditions implements OnInit {
 
   ngOnInit(): void {
     this.loadEvents();
-    this.loadEditions();
   }
 
   loadEvents(): void {
-    // Simula dados de eventos
-    this.events = [
-      { id: '1', name: 'Simpósio Brasileiro de Engenharia de Software', sigla: 'SBES' },
-      { id: '2', name: 'Conferência Brasileira de Software', sigla: 'CBS' }
-    ];
+    this.apiService.getEvents().subscribe({
+      next: (response: any) => {
+        const events = response.eventos || [];
+        this.events = events.map((e: any) => ({
+          id: e._id,
+          name: e.nome,
+          sigla: e.sigla,
+          description: e.descricao
+        }));
+        
+        // Se houver eventos, seleciona o primeiro
+        if (this.events.length > 0) {
+          this.selectedEventId = this.events[0].id!;
+          this.loadEditions();
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar eventos:', err);
+        this.snackBar.open('Erro ao carregar eventos', 'Fechar', { duration: 3000 });
+      }
+    });
   }
 
   loadEditions(): void {
-    // Simula dados de edições
-    this.allEditions = [
-      {
-        id: '1',
-        eventId: '1',
-        year: 2024,
-        numero: 37,
-        cidadeSede: 'Curitiba'
-      },
-      {
-        id: '2',
-        eventId: '1',
-        year: 2023,
-        numero: 36,
-        cidadeSede: 'Campo Grande'
-      },
-      {
-        id: '3',
-        eventId: '2',
-        year: 2024,
-        numero: 15,
-        cidadeSede: 'São Paulo'
-      }
-    ];
+    if (!this.selectedEventId) {
+      this.dataSource.data = [];
+      return;
+    }
 
-    this.filterEditions();
+    this.apiService.getEditionsByEvent(this.selectedEventId).subscribe({
+      next: (editions: any[]) => {
+        // Mapear campos do backend para frontend
+        this.allEditions = editions.map((e: any) => ({
+          id: e._id,
+          eventId: e.evento_id,
+          year: e.ano,
+          numero: e.ano, // Usar ano como número também
+          cidadeSede: e.local || 'N/A'
+        }));
+        this.filterEditions();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar edições:', err);
+        this.snackBar.open('Erro ao carregar edições', 'Fechar', { duration: 3000 });
+        this.allEditions = [];
+        this.filterEditions();
+      }
+    });
   }
 
   filterEditions(): void {
@@ -92,7 +105,7 @@ export class ManageEditions implements OnInit {
   }
 
   onEventChange(): void {
-    this.filterEditions();
+    this.loadEditions();
   }
 
   openDialog(data?: EventEdition): void {
@@ -100,7 +113,8 @@ export class ManageEditions implements OnInit {
       width: '500px',
       data: {
         edition: data || null,
-        events: this.events
+        events: this.events,
+        selectedEventId: this.selectedEventId
       }
     });
 
@@ -116,35 +130,64 @@ export class ManageEditions implements OnInit {
   }
 
   createEdition(editionData: EventEdition): void {
-    editionData.id = Math.random().toString();
-    this.allEditions.push(editionData);
-    this.filterEditions();
-    this.snackBar.open('Edição criada com sucesso!', 'Fechar', {
-      duration: 3000,
-      panelClass: ['success-snackbar']
+    // Mapear campos para o backend
+    const backendData = {
+      evento_id: editionData.eventId || this.selectedEventId,
+      ano: editionData.year,
+      local: editionData.cidadeSede
+    };
+
+    this.apiService.createEdition(backendData).subscribe({
+      next: (response: any) => {
+        this.snackBar.open('Edição criada com sucesso!', 'Fechar', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.loadEditions();
+      },
+      error: (err) => {
+        console.error('Erro ao criar edição:', err);
+        this.snackBar.open('Erro ao criar edição', 'Fechar', { duration: 3000 });
+      }
     });
   }
 
   updateEdition(id: string, editionData: EventEdition): void {
-    const index = this.allEditions.findIndex(e => e.id === id);
-    if (index !== -1) {
-      this.allEditions[index] = { ...editionData, id };
-      this.filterEditions();
-      this.snackBar.open('Edição atualizada com sucesso!', 'Fechar', {
-        duration: 3000,
-        panelClass: ['success-snackbar']
-      });
-    }
+    const backendData = {
+      ano: editionData.year,
+      local: editionData.cidadeSede
+    };
+
+    this.apiService.updateEdition(id, backendData).subscribe({
+      next: () => {
+        this.snackBar.open('Edição atualizada com sucesso!', 'Fechar', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.loadEditions();
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar edição:', err);
+        this.snackBar.open('Erro ao atualizar edição', 'Fechar', { duration: 3000 });
+      }
+    });
   }
 
   deleteEdition(id: string): void {
     const edition = this.allEditions.find(e => e.id === id);
-    if (edition && confirm(`Tem certeza que deseja excluir a edição ${edition.numero} de ${edition.year}?`)) {
-      this.allEditions = this.allEditions.filter(e => e.id !== id);
-      this.filterEditions();
-      this.snackBar.open('Edição excluída com sucesso!', 'Fechar', {
-        duration: 3000,
-        panelClass: ['success-snackbar']
+    if (edition && confirm(`Tem certeza que deseja excluir a edição de ${edition.year}?`)) {
+      this.apiService.deleteEdition(id).subscribe({
+        next: () => {
+          this.snackBar.open('Edição excluída com sucesso!', 'Fechar', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          this.loadEditions();
+        },
+        error: (err) => {
+          console.error('Erro ao excluir edição:', err);
+          this.snackBar.open('Erro ao excluir edição', 'Fechar', { duration: 3000 });
+        }
       });
     }
   }

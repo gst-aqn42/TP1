@@ -7,7 +7,7 @@ import { Event, EventEdition, Article } from '../models/event.model';
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly baseUrl = 'http://localhost:5000';
+  private readonly baseUrl = 'http://localhost:5000/api';
 
   constructor(private http: HttpClient) { }
 
@@ -29,16 +29,16 @@ export class ApiService {
   }
 
   // Edições
-  getEditionsByEvent(eventId: string): Observable<EventEdition[]> {
-    return this.http.get<EventEdition[]>(`${this.baseUrl}/eventos/${eventId}/edicoes`);
+  getEditionsByEvent(eventId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/edicoes/evento/${eventId}`);
   }
 
-  createEdition(data: Partial<EventEdition>): Observable<EventEdition> {
-    return this.http.post<EventEdition>(`${this.baseUrl}/edicoes`, data);
+  createEdition(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/edicoes/`, data);
   }
 
-  updateEdition(id: string, data: Partial<EventEdition>): Observable<EventEdition> {
-    return this.http.put<EventEdition>(`${this.baseUrl}/edicoes/${id}`, data);
+  updateEdition(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/edicoes/${id}`, data);
   }
 
   deleteEdition(id: string): Observable<void> {
@@ -46,26 +46,45 @@ export class ApiService {
   }
 
   // Artigos
-  getArticles(params?: { titulo?: string; autor?: string; evento?: string }): Observable<Article[]> {
-    let httpParams = new HttpParams();
-    if (params) {
-      if (params.titulo) httpParams = httpParams.set('titulo', params.titulo);
-      if (params.autor) httpParams = httpParams.set('autor', params.autor);
-      if (params.evento) httpParams = httpParams.set('evento', params.evento);
-    }
-    return this.http.get<Article[]>(`${this.baseUrl}/artigos`, { params: httpParams });
+  getArticlesByEdition(editionId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/artigos/edicao/${editionId}`);
   }
 
-  createArticle(formData: FormData): Observable<Article> {
-    return this.http.post<Article>(`${this.baseUrl}/artigos`, formData);
+  createArticle(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/artigos/`, data);
+  }
+
+  createArticleWithPdf(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/artigos/`, formData);
+  }
+
+  updateArticle(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/artigos/${id}`, data);
   }
 
   deleteArticle(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/artigos/${id}`);
   }
 
-  uploadBibtex(formData: FormData): Observable<Article[]> {
-    return this.http.post<Article[]>(`${this.baseUrl}/artigos/batch`, formData);
+  uploadPdfToArticle(articleId: string, formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/artigos/${articleId}/upload-pdf`, formData);
+  }
+
+  // Batch Upload
+  uploadBibtex(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/batch/upload-bibtex`, formData);
+  }
+
+  // Busca
+  searchArticles(query: string, filters?: any): Observable<any[]> {
+    let params = new HttpParams().set('q', query);
+    
+    if (filters) {
+      if (filters.autor) params = params.set('autor', filters.autor);
+      if (filters.evento) params = params.set('evento', filters.evento);
+    }
+    
+    return this.http.get<any[]>(`${this.baseUrl}/artigos/busca`, { params });
   }
 
   // Inscrições

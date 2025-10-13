@@ -18,6 +18,38 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  
+  // Estilizar botões principais
+  button[mat-raised-button] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 24px;
+    height: auto;
+    line-height: 1.5;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+  
+  // Botões secundários
+  button[mat-button], button[mat-stroked-button] {
+    font-weight: 600;
+    padding: 12px 24px;
+    height: auto;
+    line-height: 1.5;
+    border-radius: 12px;
+  }
 }
 
 .events-table {
@@ -27,6 +59,25 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 16px;
   border: 1px solid rgba(184, 149, 106, 0.3);
+  
+  // Estilizar botões de ação na tabela
+  button[mat-icon-button] {
+    &.edit-button {
+      color: #667eea;
+      
+      &:hover {
+        background-color: rgba(102, 126, 234, 0.1);
+      }
+    }
+    
+    &.delete-button {
+      color: #f5576c;
+      
+      &:hover {
+        background-color: rgba(245, 87, 108, 0.1);
+      }
+    }
+  }
 }
 
 h1 {

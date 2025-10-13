@@ -48,11 +48,30 @@
       <td mat-cell *matCellDef="let article">{{ getEditionInfo(article.eventEditionId!) }}</td>
     </ng-container>
 
+    <!-- Coluna PDF -->
+    <ng-container matColumnDef="pdf">
+      <th mat-header-cell *matHeaderCellDef>PDF</th>
+      <td mat-cell *matCellDef="let article">
+        <button mat-icon-button color="primary" 
+                (click)="uploadPdf(article.id!)"
+                matTooltip="Upload PDF">
+          <mat-icon>cloud_upload</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
     <!-- Coluna Ações -->
     <ng-container matColumnDef="acoes">
       <th mat-header-cell *matHeaderCellDef>Ações</th>
       <td mat-cell *matCellDef="let article">
-        <button mat-icon-button color="warn" (click)="deleteArticle(article.id!)">
+        <button mat-icon-button color="accent" 
+                (click)="editArticle(article)"
+                matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" 
+                (click)="deleteArticle(article.id!)"
+                matTooltip="Excluir">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

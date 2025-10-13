@@ -3,6 +3,8 @@
 ## 1. Equipe
 - **Back-end:** Gustavo Rodrigues de Aquino
 - **Front-end:** Maria Eduarda Rodrigues Pasquel
+- **Full-stack:** João Matias Ferreira dos Santos
+- **Back-end:** João Victor Taufner Pereira
 
 ## 2. Detalhamento do Projeto
 Deseja-se disponibilizar acesso de forma fácil aos artigos publicados em determinados eventos científicos. Para isso, foi proposto o desenvolvimento da **e-lib** - uma `Biblioteca Digital de Artigos` moderna e intuitiva. O sistema deve atender aos requerimentos passados pelas histórias de usuário, mas sua implementação é livre e deve ser definida pelo time. Entretanto, **é obrigatório o uso do GitHub** e recomendado a utilização de uma IA de 2ª geração.
