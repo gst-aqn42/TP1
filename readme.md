@@ -52,21 +52,105 @@ Deseja-se disponibilizar acesso de forma fácil aos artigos publicados em determ
 - **Receber notificações por e-mail**
   - Cadastro para receber alertas sempre que um novo artigo for disponibilizado com o nome do usuário
 
-## 5. CRC's
+## 5. Diagrama UML
+### 5.1 Diagrama de Sequencias: Visualização da Página de um Autor
 
+```mermaid
+sequenceDiagram
+    actor User
+    participant FE as Frontend
+    participant Route as "/api/public/autores/<nome>"
+    participant DB as MongoDB
 
-## 6. Diagrama UML
+    User->>FE: Clica no nome de um autor
+    FE->>Route: GET /api/public/autores/AutorX
+    activate Route
 
+    Route->>DB: find('artigos', {'autores.nome': 'AutorX'})
+    activate DB
+    DB-->>Route: Retorna lista de artigos
+    deactivate DB
 
-## 7. Relatório sobre o uso de IA
+    Route->>Route: Inicia um dicionário 'artigos_por_ano'
 
-[A ser preenchido após o desenvolvimento]
+    loop Para cada artigo na lista
+        Route->>DB: find_one('edicoes', {'_id': artigo.edicao_id})
+        activate DB
+        DB-->>Route: Retorna dados da edição (incluindo o ano)
+        deactivate DB
+        Route->>Route: Agrupa o artigo sob o ano correspondente no dicionário
+    end
 
-## 8. Backlog da Sprint
+    Route->>Route: Ordena as chaves (anos) do dicionário
+    Route-->>FE: 200 OK (JSON com artigos organizados por ano)
+    deactivate Route
 
-[A ser preenchido com as tarefas da sprint]
+    FE->>User: Renderiza a página do autor com os artigos agrupados por ano
+```
+### 5.2 Diagrama de Pacotes: Arquitetura do sistema
 
-## 9. Critérios de Avaliação
+```mermaid
+graph TD
+    subgraph Cliente
+        Frontend[Frontend Angular]
+    end
+
+    subgraph Backend[Backend - Flask API]
+        
+        subgraph Routes [Pacote: Routes]
+            direction TB
+            artigos_bp[artigos.py]
+            eventos_bp[eventos.py]
+            public_bp[public.py]
+            auth_bp[auth.py]
+            outros_routes[...]
+        end
+
+        subgraph Services [Pacote: Services]
+            direction TB
+            AuthService[auth.py]
+            EmailService[email_service.py]
+            DatabaseService[connection.py]
+        end
+
+        subgraph Models [Pacote: Models]
+            direction TB
+            Artigo[artigo.py]
+            Evento[evento.py]
+            Usuario[usuario.py]
+            outros_models[...]
+        end
+    end
+
+    subgraph Infraestrutura
+        MongoDB[(MongoDB)]
+        SMTPServer[(SMTP Server)]
+    end
+
+    Frontend -- HTTP API --> Routes
+    Routes -- usa --> Services
+    Routes -- usa --> Models
+    Services -- usa --> Models
+    Services -- conecta-se a --> MongoDB
+    Services -- envia via --> SMTPServer
+    Models -- persistido em --> DatabaseService
+
+    %% Styling
+    style Frontend fill:#f9f,stroke:#333,stroke-width:2px
+    style Backend fill:#ccf,stroke:#333,stroke-width:2px
+    style Infraestrutura fill:#bbf,stroke:#333,stroke-width:2px
+```
+
+## 6. Backlog da Sprint
+
+## Documentação do Projeto
+
+Para uma documentação mais detalhada, incluindo diagramas e especificações técnicas, consulte nosso manual completo em PDF.
+
+📄 **[Clique aqui para ver a backlog da sprint](https://drive.google.com/file/d/1JlLNZmsm1e8-GvJH5S9e7qtAdAkMbWyr/view?usp=sharing
+)**
+
+## 7. Critérios de Avaliação
 
 **Total:** 20 pontos
 
@@ -82,10 +166,39 @@ Deseja-se disponibilizar acesso de forma fácil aos artigos publicados em determ
 
 - **Retrospectiva (1pt)**
 
-## 10. Estrutura do Projeto
+## 9. Estrutura do Projeto
 
 ### Estrutura Atual do Front-end (Angular)
 
+
+
+```
+e-lib/backend/
+├── app/
+│   ├── models/
+│   │   ├── artigo.py
+│   │   ├── autor.py
+│   │   ├── edicao.py
+│   │   ├── evento.py
+│   │   ├── notificacao.py
+│   │   └── usuario.py
+│   ├── routes/
+│   │   ├── artigos.py
+│   │   ├── auth.py
+│   │   ├── batch_upload.py
+│   │   ├── edicoes.py
+│   │   ├── eventos.py
+│   │   ├── inscricoes.py
+│   │   ├── notificacoes.py
+│   │   └── public.py
+│   └── services/
+│       ├── auth.py
+│       ├── database.py
+│       ├── email_service.py
+│       └── connection.py
+├── run.py
+└── requirements.txt
+```
 ```
 frontend/
 ├── src/
