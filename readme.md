@@ -12,11 +12,12 @@ Deseja-se disponibilizar acesso de forma fácil aos artigos publicados em determ
 ## 3. Tecnologias
 ### Tecnologias utilizadas
 - **Linguagem Back-end:** Python
+- **Framework:**Flask
 - **Frameworks Front-end:** Angular 19 + Angular Material
 - **Banco de dados:** MongoDB
 
 - **Repositório do GitHub:** `git@github.com:gst-aqn42/TP1.git`
-- **Ferramenta de IA:** GitHub Copilot
+- **Ferramenta de IA:** GitHub Copilot; DeepSeek; Gemini;
 
 ### Dependências do Front-end
 - Angular CLI: 19.0.7
@@ -81,11 +82,7 @@ Deseja-se disponibilizar acesso de forma fácil aos artigos publicados em determ
 
 - **Retrospectiva (1pt)**
 
-## 10. Contatos
-
-Gustavo de Aquino | gst.aqn@gmail.com |
-
-## 11. Estrutura do Projeto
+## 10. Estrutura do Projeto
 
 ### Estrutura Atual do Front-end (Angular)
 

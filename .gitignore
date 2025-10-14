@@ -1,5 +1,10 @@
 # Ignorar pastas
 .lixeira/
+.venv/
+.venv-1/
+.vscode/
+BD/
+e-lib/uploads/
 
 # Ignorar a pasta 'logs' em qualquer nível do projeto
 logs/
