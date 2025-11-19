@@ -1,0 +1,24 @@
+{
+  "report-dir": "coverage-e2e",
+  "reporter": ["html", "json", "text", "lcov"],
+  "extension": [".ts"],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.cy.ts",
+    "**/cypress/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/coverage-e2e/**",
+    "**/*.config.ts",
+    "**/*.conf.js",
+    "**/test.ts",
+    "**/karma.conf.js"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "all": true,
+  "check-coverage": false,
+  "per-file": true
+}

@@ -7,7 +7,13 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "e2e": "cypress run",
+    "e2e:open": "cypress open",
+    "e2e:coverage": "cypress run && nyc report --reporter=html --reporter=text",
+    "e2e:coverage:open": "cypress run && nyc report --reporter=html && open coverage-e2e/index.html"
   },
   "prettier": {
     "printWidth": 100,
@@ -42,15 +48,19 @@
     "@angular/build": "^20.3.5",
     "@angular/cli": "^20.3.5",
     "@angular/compiler-cli": "^20.3.0",
+    "@cypress/code-coverage": "^3.14.7",
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
+    "cypress": "^13.7.0",
+    "istanbul-lib-coverage": "^3.2.2",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "nyc": "^17.1.0",
     "typescript": "~5.9.2"
   }
 }
